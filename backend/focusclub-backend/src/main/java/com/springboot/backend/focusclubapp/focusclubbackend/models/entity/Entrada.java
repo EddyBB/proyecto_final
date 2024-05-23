@@ -1,4 +1,4 @@
-package com.springboot.backend.focusclubapp.focusclubbackend.models;
+package com.springboot.backend.focusclubapp.focusclubbackend.models.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,12 +9,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Entrada")
-public class Entrada {
+@Table(name = "entradas")
+public class Entrada implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
