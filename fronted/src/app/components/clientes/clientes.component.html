@@ -1,0 +1,46 @@
+<p>{{title}}</p>
+
+@if (clientes.length == 0) {
+<div class="alert alert-warning">No hay registros en el sistema!</div>
+} @else {
+
+    <div class="container">
+        <table mat-table [dataSource]="clientes" class="mat-elevation-z8">
+          <ng-container matColumnDef="idCliente">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let cliente">{{ cliente.idCliente }}</td>
+          </ng-container>
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let cliente">{{ cliente.nombre }}</td>
+          </ng-container>
+          <ng-container matColumnDef="apellidos">
+            <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+            <td mat-cell *matCellDef="let cliente">{{ cliente.apellidos }}</td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let cliente">{{ cliente.email }}</td>
+          </ng-container>
+          <ng-container matColumnDef="telefono">
+            <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+            <td mat-cell *matCellDef="let cliente">{{ cliente.telefono }}</td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let cliente">
+              <button mat-icon-button color="accent" >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+}
+
+  

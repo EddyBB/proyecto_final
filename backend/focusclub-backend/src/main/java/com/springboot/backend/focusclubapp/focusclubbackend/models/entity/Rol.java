@@ -56,5 +56,6 @@ public class Rol implements Serializable{
                 ", tipoRol='" + tipoRol + '\'' +
                 '}';
     }
+
 }
 
