@@ -10,5 +10,5 @@ import { ClientesComponent } from './components/clientes/clientes.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'fronted';
+  title = 'FocusClub';
 }

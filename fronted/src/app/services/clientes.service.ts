@@ -1,41 +1,30 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { clientes } from '../models/clientes';
-import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientesService {
 
-  private clientes: clientes[] =[{
+  private baseUrl = 'http://localhost:8080/api/clientes';
 
-    idCliente: 1,
-    nombre:  'Eddy',
-    apellidos: 'Gonzalez',
-    email: 'eddy@gmail.com',
-    telefono: 123456789,
-    password: 'eddy'
-  },
-  {
-    idCliente: 2,
-    nombre:  'Paco',
-    apellidos: 'Rodriguez',
-    email: 'paco@gmail.com',
-    telefono: 123456789,
-    password: 'paco'
-  },
-  {
-    idCliente: 3,
-    nombre:  'Puiu',
-    apellidos: 'Marius',
-    email: 'puiu@gmail.com',
-    telefono: 123456789,
-    password: 'puiu'
-  }]
-
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   findAll(): Observable<clientes[]> {
-    return of(this.clientes);
+    return this.http.get<clientes[]>(this.baseUrl);
+  }
+
+  create(cliente: clientes): Observable<clientes> {
+    return this.http.post<clientes>(this.baseUrl, cliente);
+  }
+
+  update(id: number, cliente: clientes): Observable<clientes> {
+    return this.http.put<clientes>(`${this.baseUrl}/${id}`, cliente);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

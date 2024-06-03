@@ -8,15 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 import java.io.Serializable;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "clientes")
-public class Cliente implements Serializable{
+public class Cliente implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +34,7 @@ public class Cliente implements Serializable{
     @Column(length = 255, nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idRol", nullable = false)
     private Rol rol;
 
@@ -113,7 +110,6 @@ public class Cliente implements Serializable{
         this.rol = rol;
     }
 
-    // toString
     @Override
     public String toString() {
         return "Cliente{" +
@@ -127,4 +123,3 @@ public class Cliente implements Serializable{
                 '}';
     }
 }
-
