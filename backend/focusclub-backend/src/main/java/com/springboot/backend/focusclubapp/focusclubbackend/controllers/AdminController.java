@@ -39,9 +39,6 @@ public class AdminController {
     @Autowired
     private CompraService compraService;
 
-    @Autowired
-    private RolService rolService;
-
     @GetMapping("/clientes")
     @PreAuthorize("hasRole('ADMIN')")
     public List<Cliente> getAllClientes() {

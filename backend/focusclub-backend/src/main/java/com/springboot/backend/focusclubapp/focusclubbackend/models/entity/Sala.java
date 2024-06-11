@@ -15,18 +15,18 @@ import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "salas")
-public class Sala implements Serializable{
+public class Sala implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idSala;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idEvento", nullable = false)
+    @JoinColumn(name = "id_evento", nullable = false) // Asegúrate de que el nombre de la columna es correcto
     private Evento evento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idDiscoteca", nullable = false)
+    @JoinColumn(name = "id_discoteca", nullable = false) // Asegúrate de que el nombre de la columna es correcto
     private Discoteca discoteca;
 
     @Column(length = 100, nullable = false)
@@ -88,4 +88,3 @@ public class Sala implements Serializable{
                 '}';
     }
 }
-
