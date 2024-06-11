@@ -16,9 +16,10 @@ public class Rol implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_rol")
     private Long idRol;
     
-    @Column(length = 50, nullable = false)
+    @Column(name = "tipo_rol", length = 50, nullable = false)
     private String tipoRol;
 
     // Constructor con argumentos

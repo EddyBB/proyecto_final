@@ -1,22 +1,13 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.models.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "entradas")
-public class Entrada implements Serializable{
+public class Entrada implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,25 +22,29 @@ public class Entrada implements Serializable{
     private Evento evento;
 
     @Column(nullable = false)
-    private LocalDate fechaCompra;
+    private LocalDateTime fechaCompra;
 
     @Column(nullable = false)
-    private BigDecimal precioEntrada;
+    private BigDecimal precioTotal;
 
-    // Constructor con argumentos
-    public Entrada(Long idEntrada, Cliente cliente, Evento evento, LocalDate fechaCompra, BigDecimal precioEntrada) {
-        this.idEntrada = idEntrada;
-        this.cliente = cliente;
-        this.evento = evento;
-        this.fechaCompra = fechaCompra;
-        this.precioEntrada = precioEntrada;
-    }
+    @Column(nullable = false)
+    private int cantidadEntradas;
 
     // Constructor sin argumentos
     public Entrada() {
     }
 
-    // Getters and Setters
+    // Constructor con argumentos
+    public Entrada(Long idEntrada, Cliente cliente, Evento evento, LocalDateTime fechaCompra, BigDecimal precioTotal, int cantidadEntradas) {
+        this.idEntrada = idEntrada;
+        this.cliente = cliente;
+        this.evento = evento;
+        this.fechaCompra = fechaCompra;
+        this.precioTotal = precioTotal;
+        this.cantidadEntradas = cantidadEntradas;
+    }
+
+    // Getters y Setters
     public Long getIdEntrada() {
         return idEntrada;
     }
@@ -74,23 +69,30 @@ public class Entrada implements Serializable{
         this.evento = evento;
     }
 
-    public LocalDate getFechaCompra() {
+    public LocalDateTime getFechaCompra() {
         return fechaCompra;
     }
 
-    public void setFechaCompra(LocalDate fechaCompra) {
+    public void setFechaCompra(LocalDateTime fechaCompra) {
         this.fechaCompra = fechaCompra;
     }
 
-    public BigDecimal getPrecioEntrada() {
-        return precioEntrada;
+    public BigDecimal getPrecioTotal() {
+        return precioTotal;
     }
 
-    public void setPrecioEntrada(BigDecimal precioEntrada) {
-        this.precioEntrada = precioEntrada;
+    public void setPrecioTotal(BigDecimal precioTotal) {
+        this.precioTotal = precioTotal;
     }
 
-    // toString
+    public int getCantidadEntradas() {
+        return cantidadEntradas;
+    }
+
+    public void setCantidadEntradas(int cantidadEntradas) {
+        this.cantidadEntradas = cantidadEntradas;
+    }
+
     @Override
     public String toString() {
         return "Entrada{" +
@@ -98,8 +100,8 @@ public class Entrada implements Serializable{
                 ", cliente=" + cliente +
                 ", evento=" + evento +
                 ", fechaCompra=" + fechaCompra +
-                ", precioEntrada=" + precioEntrada +
+                ", precioTotal=" + precioTotal +
+                ", cantidadEntradas=" + cantidadEntradas +
                 '}';
     }
 }
-

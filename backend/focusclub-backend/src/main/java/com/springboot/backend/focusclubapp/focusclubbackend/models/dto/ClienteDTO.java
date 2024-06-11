@@ -8,6 +8,7 @@ public class ClienteDTO {
     private String telefono;
     private String password;
     private RolDTO rol;
+    private String imagenPerfil;
 
     // Getters y Setters
     public Long getIdCliente() {
@@ -65,5 +66,12 @@ public class ClienteDTO {
     public void setRol(RolDTO rol) {
         this.rol = rol;
     }
-}
 
+    public String getImagenPerfil() {
+        return imagenPerfil;
+    }
+
+    public void setImagenPerfil(String imagenPerfil) {
+        this.imagenPerfil = imagenPerfil;
+    }
+}

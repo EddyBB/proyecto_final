@@ -9,5 +9,6 @@ export interface clientes {
       idRol: number;
       tipoRol: string;
     };
+    imagenPerfil: string;
   }
   

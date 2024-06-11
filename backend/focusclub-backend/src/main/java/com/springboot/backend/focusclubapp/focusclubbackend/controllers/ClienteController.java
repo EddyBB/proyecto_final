@@ -2,31 +2,32 @@ package com.springboot.backend.focusclubapp.focusclubbackend.controllers;
 
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.ClienteDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Cliente;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Rol;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.mapper.Mapper;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.ClienteService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@CrossOrigin (origins={"http://localhost:4200"})
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
-    private final ClienteService service;
+    @Autowired
+    private ClienteService service;
 
     @Autowired
-    public ClienteController(ClienteService service) {
-        this.service = service;
-    }
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<ClienteDTO> list() {
@@ -54,17 +55,28 @@ public class ClienteController {
         cliente.setApellidos(clienteDTO.getApellidos());
         cliente.setEmail(clienteDTO.getEmail());
         cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setPassword(clienteDTO.getPassword());
+        cliente.setPassword(passwordEncoder.encode(clienteDTO.getPassword())); // Encriptar la contraseña
 
-        if (clienteDTO.getRol() == null) {
-            cliente.setRol(service.getDefaultRol());
-        } else {
-            cliente.setRol(Mapper.toRol(clienteDTO.getRol()));
-        }
+        Rol defaultRol = service.getDefaultRol();
+        cliente.setRol(defaultRol);
 
         Cliente clienteSaved = service.save(cliente);
         ClienteDTO clienteSavedDTO = Mapper.toClienteDTO(clienteSaved);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteSavedDTO);
+    }
+
+    @PostMapping("/{id}/imagen")
+    public ResponseEntity<String> uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        Optional<Cliente> clienteOptional = service.findById(id);
+        if (clienteOptional.isPresent()) {
+            String imageUrl = service.saveImage(file);
+            Cliente cliente = clienteOptional.get();
+            cliente.setImagenPerfil(imageUrl);
+            service.save(cliente);
+            return ResponseEntity.status(HttpStatus.OK).body("Imagen subida exitosamente: " + imageUrl);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("El cliente no se encontró por el id: " + id);
     }
 
     @PutMapping("/{id}")
@@ -77,8 +89,9 @@ public class ClienteController {
             clienteDb.setApellidos(clienteDTO.getApellidos());
             clienteDb.setEmail(clienteDTO.getEmail());
             clienteDb.setTelefono(clienteDTO.getTelefono());
-            clienteDb.setPassword(clienteDTO.getPassword());
-            clienteDb.setRol(Mapper.toRol(clienteDTO.getRol()));
+            clienteDb.setPassword(passwordEncoder.encode(clienteDTO.getPassword())); // Encriptar la contraseña
+            clienteDb.setRol(service.getDefaultRol());
+            clienteDb.setImagenPerfil(clienteDTO.getImagenPerfil()); // Asegúrate de incluir este campo en ClienteDTO
 
             Cliente clienteUpdated = service.save(clienteDb);
             ClienteDTO clienteUpdatedDTO = Mapper.toClienteDTO(clienteUpdated);
@@ -88,16 +101,11 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         Optional<Cliente> clienteOptional = service.findById(id);
         if (clienteOptional.isPresent()) {
-            try {
-                service.deleteById(id);
-                return ResponseEntity.noContent().build();
-            } catch (DataIntegrityViolationException e) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(Collections.singletonMap("error", "Cannot delete or update a parent row: a foreign key constraint fails"));
-            }
+            service.deleteById(id);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }

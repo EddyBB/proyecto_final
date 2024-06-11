@@ -1,41 +1,27 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.models.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-import java.io.Serializable;
-
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "discotecas")
-public class Discoteca implements Serializable{
+public class Discoteca {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDiscoteca;
-
-    @Column(length = 100, nullable = false)
     private String nombre;
-
-    @Column(length = 150, nullable = false)
     private String ubicacion;
 
-    // Constructor con argumentos
-    public Discoteca(Long idDiscoteca, String nombre, String ubicacion) {
-        this.idDiscoteca = idDiscoteca;
-        this.nombre = nombre;
-        this.ubicacion = ubicacion;
-    }
-
-    // Constructor sin argumentos
+    // Constructor vacío
     public Discoteca() {
     }
 
-    // Getters and Setters
+    // Constructor con id
+    public Discoteca(Long idDiscoteca) {
+        this.idDiscoteca = idDiscoteca;
+    }
+
+    // Getters y Setters
     public Long getIdDiscoteca() {
         return idDiscoteca;
     }
@@ -59,15 +45,4 @@ public class Discoteca implements Serializable{
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
-
-    // toString
-    @Override
-    public String toString() {
-        return "Discoteca{" +
-                "idDiscoteca=" + idDiscoteca +
-                ", nombre='" + nombre + '\'' +
-                ", ubicacion='" + ubicacion + '\'' +
-                '}';
-    }
 }
-

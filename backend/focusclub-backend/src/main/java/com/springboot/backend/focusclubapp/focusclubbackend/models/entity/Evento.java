@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "eventos")
-public class Evento implements Serializable{
+public class Evento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +37,16 @@ public class Evento implements Serializable{
     @Column(nullable = false)
     private BigDecimal precio;
 
+    @Column(length = 255) // Adjust the length as needed
+    private String imagenUrl;
+
+    // Constructor con solo id
+    public Evento(Long idEvento) {
+        this.idEvento = idEvento;
+    }
+
     // Constructor con argumentos
-    public Evento(Long idEvento, String nombre, Integer entradasDisponibles, String descripcion, Integer aforo, LocalDate fecha, BigDecimal precio) {
+    public Evento(Long idEvento, String nombre, Integer entradasDisponibles, String descripcion, Integer aforo, LocalDate fecha, BigDecimal precio, String imagenUrl) {
         this.idEvento = idEvento;
         this.nombre = nombre;
         this.entradasDisponibles = entradasDisponibles;
@@ -46,6 +54,7 @@ public class Evento implements Serializable{
         this.aforo = aforo;
         this.fecha = fecha;
         this.precio = precio;
+        this.imagenUrl = imagenUrl;
     }
 
     // Constructor sin argumentos
@@ -109,6 +118,14 @@ public class Evento implements Serializable{
         this.precio = precio;
     }
 
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
     // toString
     @Override
     public String toString() {
@@ -120,7 +137,7 @@ public class Evento implements Serializable{
                 ", aforo=" + aforo +
                 ", fecha=" + fecha +
                 ", precio=" + precio +
+                ", imagenUrl='" + imagenUrl + '\'' +
                 '}';
     }
 }
-
