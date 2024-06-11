@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface ISalaDao extends CrudRepository<Sala, Long> {
     @Query("SELECT s FROM Sala s WHERE s.evento.idEvento = :eventoId")
     List<Sala> findByEventoId(@Param("eventoId") Long eventoId);
+
+    List<Sala> findByDiscoteca_IdDiscoteca(Long discotecaId);
 }

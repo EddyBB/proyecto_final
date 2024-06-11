@@ -22,11 +22,11 @@ public class Sala implements Serializable {
     private Long idSala;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_evento", nullable = false) // Asegúrate de que el nombre de la columna es correcto
+    @JoinColumn(name = "id_evento", nullable = false)
     private Evento evento;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_discoteca", nullable = false) // Asegúrate de que el nombre de la columna es correcto
+    @JoinColumn(name = "id_discoteca", nullable = false)
     private Discoteca discoteca;
 
     @Column(length = 100, nullable = false)
