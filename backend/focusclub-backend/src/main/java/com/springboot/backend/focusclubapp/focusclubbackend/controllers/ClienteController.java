@@ -2,13 +2,13 @@ package com.springboot.backend.focusclubapp.focusclubbackend.controllers;
 
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.ClienteDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Cliente;
-import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Rol;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.mapper.Mapper;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.ClienteService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,32 +37,17 @@ public class ClienteController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id) {
-        Optional<Cliente> clienteOptional = service.findById(id);
+    @GetMapping("/me")
+    public ResponseEntity<?> getProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Cliente> clienteOptional = service.findByEmail(email);
         if (clienteOptional.isPresent()) {
             ClienteDTO clienteDTO = Mapper.toClienteDTO(clienteOptional.get());
             return ResponseEntity.status(HttpStatus.OK).body(clienteDTO);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap("error", "El usuario no se encontró por el id: " + id));
-    }
-
-    @PostMapping
-    public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTO clienteDTO) {
-        Cliente cliente = new Cliente();
-        cliente.setNombre(clienteDTO.getNombre());
-        cliente.setApellidos(clienteDTO.getApellidos());
-        cliente.setEmail(clienteDTO.getEmail());
-        cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setPassword(passwordEncoder.encode(clienteDTO.getPassword())); // Encriptar la contraseña
-
-        Rol defaultRol = service.getDefaultRol();
-        cliente.setRol(defaultRol);
-
-        Cliente clienteSaved = service.save(cliente);
-        ClienteDTO clienteSavedDTO = Mapper.toClienteDTO(clienteSaved);
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteSavedDTO);
+                .body(Collections.singletonMap("error", "El usuario no se encontró"));
     }
 
     @PostMapping("/{id}/imagen")
@@ -79,9 +64,11 @@ public class ClienteController {
                 .body("El cliente no se encontró por el id: " + id);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> update(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
-        Optional<Cliente> clienteOptional = service.findById(id);
+    @PutMapping("/me")
+    public ResponseEntity<ClienteDTO> updateProfile(@RequestBody ClienteDTO clienteDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Cliente> clienteOptional = service.findByEmail(email);
 
         if (clienteOptional.isPresent()) {
             Cliente clienteDb = clienteOptional.get();
@@ -100,11 +87,13 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Optional<Cliente> clienteOptional = service.findById(id);
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Cliente> clienteOptional = service.findByEmail(email);
         if (clienteOptional.isPresent()) {
-            service.deleteById(id);
+            service.deleteById(clienteOptional.get().getIdCliente());
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

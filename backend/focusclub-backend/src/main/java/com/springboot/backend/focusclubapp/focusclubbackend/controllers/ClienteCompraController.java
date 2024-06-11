@@ -1,6 +1,6 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.controllers;
 
-import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Compra;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.CompraService;
 import com.springboot.backend.focusclubapp.focusclubbackend.security.CustomUserDetails;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -31,20 +31,20 @@ public class ClienteCompraController {
     private CompraService compraService;
 
     @GetMapping
-    public ResponseEntity<List<Compra>> getCompras() {
+    public ResponseEntity<List<CompraDTO>> getCompras() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long clienteId = userDetails.getCliente().getIdCliente();
 
-        List<Compra> compras = compraService.findByClienteId(clienteId);
+        List<CompraDTO> compras = compraService.findByClienteId(clienteId);
         return ResponseEntity.ok(compras);
     }
 
     @GetMapping("/{id}/download")
     public ResponseEntity<byte[]> downloadCompra(@PathVariable Long id) {
-        Optional<Compra> optionalCompra = compraService.findById(id);
+        Optional<CompraDTO> optionalCompra = compraService.findById(id);
         if (optionalCompra.isPresent()) {
-            Compra compra = optionalCompra.get();
+            CompraDTO compra = optionalCompra.get();
             try (ByteArrayOutputStream out = new ByteArrayOutputStream(); PDDocument document = new PDDocument()) {
                 PDPage page = new PDPage();
                 document.addPage(page);
@@ -56,9 +56,9 @@ public class ClienteCompraController {
                     contentStream.newLineAtOffset(25, 750);
                     contentStream.showText("Detalle de la Compra");
                     contentStream.newLine();
-                    contentStream.showText("ID Compra: " + compra.getId());
+                    contentStream.showText("ID Compra: " + compra.getIdCompra());
                     contentStream.newLine();
-                    contentStream.showText("Cliente: " + compra.getCliente().getNombre());
+                    contentStream.showText("Cliente: " + compra.getClienteId()); // Puedes agregar más detalles si tienes acceso a ellos
                     contentStream.newLine();
                     contentStream.showText("ID Evento: " + compra.getEventoId());
                     contentStream.newLine();
@@ -73,7 +73,7 @@ public class ClienteCompraController {
                 document.save(out);
 
                 HttpHeaders headers = new HttpHeaders();
-                headers.add("Content-Disposition", "inline; filename=compra_" + compra.getId() + ".pdf");
+                headers.add("Content-Disposition", "inline; filename=compra_" + compra.getIdCompra() + ".pdf");
 
                 return ResponseEntity.ok()
                         .headers(headers)

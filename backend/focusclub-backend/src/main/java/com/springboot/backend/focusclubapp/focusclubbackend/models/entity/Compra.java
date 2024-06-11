@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "compras")
@@ -20,14 +22,19 @@ public class Compra {
     @JsonBackReference
     private Cliente cliente;
 
-    @Column(name = "id_evento", nullable = false)
-    private Long eventoId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_evento", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Evento evento;
 
     @Column(name = "cantidad_entradas", nullable = false)
     private int cantidadEntradas;
 
     @Column(name = "precio_total", nullable = false)
     private BigDecimal precioTotal;
+
+    @Column(name = "precio_entrada", nullable = false)
+    private BigDecimal precioEntrada;
 
     @Column(name = "fecha_compra", nullable = false)
     private LocalDateTime fechaCompra;
@@ -50,12 +57,12 @@ public class Compra {
         this.cliente = cliente;
     }
 
-    public Long getEventoId() {
-        return eventoId;
+    public Evento getEvento() {
+        return evento;
     }
 
-    public void setEventoId(Long eventoId) {
-        this.eventoId = eventoId;
+    public void setEvento(Evento evento) {
+        this.evento = evento;
     }
 
     public int getCantidadEntradas() {
@@ -72,6 +79,14 @@ public class Compra {
 
     public void setPrecioTotal(BigDecimal precioTotal) {
         this.precioTotal = precioTotal;
+    }
+
+    public BigDecimal getPrecioEntrada() {
+        return precioEntrada;
+    }
+
+    public void setPrecioEntrada(BigDecimal precioEntrada) {
+        this.precioEntrada = precioEntrada;
     }
 
     public LocalDateTime getFechaCompra() {

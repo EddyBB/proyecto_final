@@ -1,6 +1,6 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.controllers;
 
-import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Compra;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.CompraService;
 import com.springboot.backend.focusclubapp.focusclubbackend.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,12 @@ public class CompraController {
     private CompraService compraService;
 
     @GetMapping("/compras")
-    public ResponseEntity<List<Compra>> getCompras() {
+    public ResponseEntity<List<CompraDTO>> getCompras() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long clienteId = userDetails.getCliente().getIdCliente();
 
-        List<Compra> compras = compraService.findByClienteId(clienteId);
+        List<CompraDTO> compras = compraService.findByClienteId(clienteId);
         return ResponseEntity.ok(compras);
     }
 }

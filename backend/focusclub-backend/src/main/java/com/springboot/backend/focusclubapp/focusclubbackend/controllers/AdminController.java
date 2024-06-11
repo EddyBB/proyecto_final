@@ -1,6 +1,8 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.controllers;
 
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dao.IEventoDao;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.ClienteUpdateDTO;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.SalaDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.*;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.*;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,9 @@ public class AdminController {
     private EventoService eventoService;
 
     @Autowired
+    private IEventoDao eventoRepository;
+
+    @Autowired
     private DiscotecaService discotecaService;
 
     @Autowired
@@ -38,6 +44,9 @@ public class AdminController {
 
     @Autowired
     private CompraService compraService;
+
+    @Autowired
+    private RolService rolService;
 
     @GetMapping("/clientes")
     @PreAuthorize("hasRole('ADMIN')")
@@ -121,17 +130,33 @@ public class AdminController {
 
     @GetMapping("/compras")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<Compra> getAllCompras() {
+    public List<CompraDTO> getAllCompras() {
         logger.debug("Obteniendo todas las compras");
         return compraService.findAll();
     }
 
     @GetMapping("/compras/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Compra> getCompraById(@PathVariable Long id) {
+    public ResponseEntity<CompraDTO> getCompraById(@PathVariable Long id) {
         logger.debug("Obteniendo compra con id: {}", id);
-        Optional<Compra> optionalCompra = compraService.findById(id);
+        Optional<CompraDTO> optionalCompra = compraService.findById(id);
         return optionalCompra.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @GetMapping("/roles")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Rol> getAllRoles() {
+        logger.debug("Obteniendo todos los roles");
+        return rolService.findAll();
+    }
+
+    @GetMapping("/roles/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Rol> getRolById(@PathVariable Long id) {
+        logger.debug("Obteniendo rol con id: {}", id);
+        Optional<Rol> optionalRol = rolService.findById(id);
+        return optionalRol.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
@@ -177,10 +202,18 @@ public class AdminController {
 
     @PostMapping("/compras")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Compra> createCompra(@RequestBody Compra compra) {
+    public ResponseEntity<CompraDTO> createCompra(@RequestBody CompraDTO compraDTO) {
         logger.debug("Creando compra");
-        Compra createdCompra = compraService.save(compra);
+        CompraDTO createdCompra = compraService.save(compraDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCompra);
+    }
+
+    @PostMapping("/roles")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Rol> createRol(@RequestBody Rol rol) {
+        logger.debug("Creando rol: {}", rol.getTipoRol());
+        Rol createdRol = rolService.save(rol);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdRol);
     }
 
     @PutMapping("/clientes/{id}")
@@ -257,24 +290,47 @@ public class AdminController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-
+    
     @PutMapping("/compras/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Compra> updateCompra(@PathVariable Long id, @RequestBody Compra compra) {
+    public ResponseEntity<CompraDTO> updateCompra(@PathVariable Long id, @RequestBody CompraDTO compraDTO) {
         logger.debug("Actualizando compra con id: {}", id);
-        Optional<Compra> optionalCompra = compraService.findById(id);
+        Optional<CompraDTO> optionalCompra = compraService.findById(id);
         if (optionalCompra.isPresent()) {
-            Compra existingCompra = optionalCompra.get();
-            existingCompra.setCliente(compra.getCliente());
-            existingCompra.setEventoId(compra.getEventoId());
-            existingCompra.setCantidadEntradas(compra.getCantidadEntradas());
-            existingCompra.setPrecioTotal(compra.getPrecioTotal());
-            existingCompra.setFechaCompra(compra.getFechaCompra());
-            Compra updatedCompra = compraService.save(existingCompra);
-            return ResponseEntity.ok(updatedCompra);
+            CompraDTO existingCompraDTO = optionalCompra.get();
+            existingCompraDTO.setClienteId(compraDTO.getClienteId());
+            existingCompraDTO.setEventoId(compraDTO.getEventoId());
+            existingCompraDTO.setCantidadEntradas(compraDTO.getCantidadEntradas());
+            existingCompraDTO.setFechaCompra(compraDTO.getFechaCompra());
+            
+            // Calcular el nuevo precio por unidad y el precio total
+            BigDecimal precioPorUnidad = eventoRepository.findById(compraDTO.getEventoId())
+                    .map(Evento::getPrecio).orElse(BigDecimal.ZERO);
+            BigDecimal precioTotal = precioPorUnidad.multiply(BigDecimal.valueOf(compraDTO.getCantidadEntradas()));
+            existingCompraDTO.setPrecioEntrada(precioPorUnidad);
+            existingCompraDTO.setPrecioTotal(precioTotal);
+            
+            CompraDTO updatedCompraDTO = compraService.save(existingCompraDTO);
+            return ResponseEntity.ok(updatedCompraDTO);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @PutMapping("/roles/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Rol> updateRol(@PathVariable Long id, @RequestBody Rol rol) {
+        logger.debug("Actualizando rol con id: {}", id);
+        Optional<Rol> optionalRol = rolService.findById(id);
+        if (optionalRol.isPresent()) {
+            Rol existingRol = optionalRol.get();
+            existingRol.setTipoRol(rol.getTipoRol());
+            Rol updatedRol = rolService.save(existingRol);
+            return ResponseEntity.ok(updatedRol);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    
+    
 
     @DeleteMapping("/clientes/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -315,12 +371,19 @@ public class AdminController {
         entradaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
     @DeleteMapping("/compras/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCompra(@PathVariable Long id) {
         logger.debug("Eliminando compra con id: {}", id);
         compraService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/roles/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteRol(@PathVariable Long id) {
+        logger.debug("Eliminando rol con id: {}", id);
+        rolService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

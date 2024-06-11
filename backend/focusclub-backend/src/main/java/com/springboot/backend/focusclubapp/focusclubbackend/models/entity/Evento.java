@@ -37,7 +37,7 @@ public class Evento implements Serializable {
     @Column(nullable = false)
     private BigDecimal precio;
 
-    @Column(length = 255) // Adjust the length as needed
+    @Column(length = 255)
     private String imagenUrl;
 
     // Constructor con solo id

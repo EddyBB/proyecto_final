@@ -50,7 +50,7 @@ public class EventoServiceImpl implements EventoService {
     @Transactional
     public void deleteById(Long id) {
         // Eliminar todas las compras que dependen del evento
-        List<Compra> compras = compraRepository.findByEventoId(id);
+        List<Compra> compras = compraRepository.findByEvento_IdEvento(id);
         for (Compra compra : compras) {
             compraRepository.delete(compra);
         }

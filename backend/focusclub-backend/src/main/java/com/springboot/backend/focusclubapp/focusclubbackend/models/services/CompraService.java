@@ -1,18 +1,15 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.models.services;
 
-import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Compra;
-
 import java.util.List;
 import java.util.Optional;
 
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
+
 public interface CompraService {
-    List<Compra> findByClienteId(Long clienteId);
-
-    Compra save(Compra compra);
-
-    List<Compra> findAll();
-
+    List<CompraDTO> findByClienteId(Long clienteId);
+    CompraDTO save(CompraDTO compraDTO);
+    List<CompraDTO> findAll();
     void deleteById(Long id);
-
-    Optional<Compra> findById(Long id);
+    Optional<CompraDTO> findById(Long id);
 }
+
