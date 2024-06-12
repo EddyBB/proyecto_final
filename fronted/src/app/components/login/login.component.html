@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="card">
+      <h2>Login</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div>
+          <label for="email">Email</label>
+          <input id="email" formControlName="email" type="email">
+          <div *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].invalid">
+            <small *ngIf="loginForm.controls['email'].errors?.['required']">Email es requerido</small>
+            <small *ngIf="loginForm.controls['email'].errors?.['email']">Email es inválido</small>
+          </div>
+        </div>
+  
+        <div>
+          <label for="password">Password</label>
+          <input id="password" formControlName="password" type="password">
+          <div *ngIf="loginForm.controls['password'].touched && loginForm.controls['password'].invalid">
+            <small *ngIf="loginForm.controls['password'].errors?.['required']">Password es requerido</small>
+          </div>
+        </div>
+  
+        <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      </form>
+      <div *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+  

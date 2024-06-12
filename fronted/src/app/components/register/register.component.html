@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="card">
+      <h2>Registro</h2>
+      <form [formGroup]="registerForm" (ngSubmit)="register()">
+        <div>
+          <label for="nombre">Nombre</label>
+          <input id="nombre" formControlName="nombre" type="text">
+          <div *ngIf="registerForm.controls['nombre'].touched && registerForm.controls['nombre'].invalid">
+            <small *ngIf="registerForm.controls['nombre'].errors?.['required']">Nombre es requerido</small>
+          </div>
+        </div>
+  
+        <div>
+          <label for="apellidos">Apellidos</label>
+          <input id="apellidos" formControlName="apellidos" type="text">
+          <div *ngIf="registerForm.controls['apellidos'].touched && registerForm.controls['apellidos'].invalid">
+            <small *ngIf="registerForm.controls['apellidos'].errors?.['required']">Apellidos es requerido</small>
+          </div>
+        </div>
+  
+        <div>
+          <label for="email">Email</label>
+          <input id="email" formControlName="email" type="email">
+          <div *ngIf="registerForm.controls['email'].touched && registerForm.controls['email'].invalid">
+            <small *ngIf="registerForm.controls['email'].errors?.['required']">Email es requerido</small>
+            <small *ngIf="registerForm.controls['email'].errors?.['email']">Email es inválido</small>
+          </div>
+        </div>
+  
+        <div>
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" formControlName="telefono" type="text">
+          <div *ngIf="registerForm.controls['telefono'].touched && registerForm.controls['telefono'].invalid">
+            <small *ngIf="registerForm.controls['telefono'].errors?.['required']">Teléfono es requerido</small>
+          </div>
+        </div>
+  
+        <div>
+          <label for="password">Password</label>
+          <input id="password" formControlName="password" type="password">
+          <div *ngIf="registerForm.controls['password'].touched && registerForm.controls['password'].invalid">
+            <small *ngIf="registerForm.controls['password'].errors?.['required']">Password es requerido</small>
+          </div>
+        </div>
+  
+        <button type="submit" [disabled]="registerForm.invalid">Registrar</button>
+      </form>
+    </div>
+  </div>
+  
