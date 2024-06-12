@@ -60,7 +60,7 @@ public class JwtTokenProvider {
                     .parseClaimsJws(authToken);
             return true;
         } catch (JwtException ex) {
-            // Log the exception or handle it as needed
+            
         }
         return false;
     }

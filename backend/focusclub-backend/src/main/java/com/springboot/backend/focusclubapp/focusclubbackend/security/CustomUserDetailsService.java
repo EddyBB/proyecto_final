@@ -22,19 +22,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        logger.debug("Loading user by email: {}", email);
+        logger.debug("Cargando usuario por email: {}", email);
         Cliente cliente = clienteDao.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + email));
-        logger.debug("Loaded User: {}, Role: {}", cliente.getEmail(), cliente.getRol().getTipoRol());
+        logger.debug("Usuario cargado: {}, Role: {}", cliente.getEmail(), cliente.getRol().getTipoRol());
         return CustomUserDetails.create(cliente);
     }
 
     @Transactional(readOnly = true)
     public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
-        logger.debug("Loading user by id: {}", id);
+        logger.debug("Cargando usuario por id: {}", id);
         Cliente cliente = clienteDao.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con id: " + id));
-        logger.debug("Loaded User: {}, Role: {}", cliente.getEmail(), cliente.getRol().getTipoRol());
+        logger.debug("Usuario cargado: {}, Role: {}", cliente.getEmail(), cliente.getRol().getTipoRol());
         return CustomUserDetails.create(cliente);
     }
 }

@@ -24,8 +24,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        System.out.println("Login Attempt: " + loginRequest.getEmail());
-        System.out.println("Password: " + loginRequest.getPassword());
+        System.out.println("Intento de inicio de sesión: " + loginRequest.getEmail());
+        System.out.println("Contraseña: " + loginRequest.getPassword());
 
         Authentication authentication = null;
         try {
@@ -36,8 +36,8 @@ public class AuthController {
                     )
             );
         } catch (Exception e) {
-            System.out.println("Authentication failed: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+            System.out.println("Autentificación fallida: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Autentificación fallida");
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

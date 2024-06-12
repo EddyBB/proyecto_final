@@ -39,23 +39,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (jwt != null && tokenProvider.validateToken(jwt)) {
             String email = tokenProvider.getUserEmailFromJWT(jwt);
-            logger.debug("JWT token validated, email: {}", email);
+            logger.debug("Token JWT validado, email: {}", email);
 
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            logger.debug("User authenticated, email: {}", email);
+            logger.debug("Usuario autenticado, email: {}", email);
         } else {
-            logger.debug("JWT token is null or invalid");
+            logger.debug("JWT token es null o invalido");
         }
 
         filterChain.doFilter(request, response);
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
+        String bearerToken = request.getHeader("Autorización");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

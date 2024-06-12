@@ -58,7 +58,7 @@ public class ClienteCompraController {
                     contentStream.newLine();
                     contentStream.showText("ID Compra: " + compra.getIdCompra());
                     contentStream.newLine();
-                    contentStream.showText("Cliente: " + compra.getClienteId()); // Puedes agregar más detalles si tienes acceso a ellos
+                    contentStream.showText("Cliente: " + compra.getClienteId());
                     contentStream.newLine();
                     contentStream.showText("ID Evento: " + compra.getEventoId());
                     contentStream.newLine();
