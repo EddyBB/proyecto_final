@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,4 +66,17 @@ public class EventoServiceImpl implements EventoService {
         // Ahora podemos eliminar el evento
         eventoRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Evento> findByDate(LocalDate date) {
+        System.out.println("Filtering events for date: " + date); // Añadido para depuración
+        LocalDate utcDate = date.atStartOfDay(ZoneId.of("UTC")).toLocalDate();
+        List<Evento> eventos = eventoRepository.findByFecha(utcDate);
+        for (Evento evento : eventos) {
+            System.out.println("Evento encontrado: " + evento.getNombre() + " con fecha: " + evento.getFecha());
+        }
+        return eventos;
+    }
+    
 }

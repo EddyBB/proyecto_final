@@ -46,3 +46,32 @@ body {
   font-size: 1em;
   margin: 0.5em 0;
 }
+
+.date-picker-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.events-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.event-card {
+  background-color: #444;
+  color: #fff;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: 200px;
+}
+
+.event-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}

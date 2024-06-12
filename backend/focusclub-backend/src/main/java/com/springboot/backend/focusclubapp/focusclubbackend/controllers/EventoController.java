@@ -5,10 +5,13 @@ import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Evento
 import com.springboot.backend.focusclubapp.focusclubbackend.models.mapper.Mapper;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +25,15 @@ public class EventoController {
     private EventoService eventoService;
 
     @GetMapping
-    public List<EventoDTO> list() {
-        List<Evento> eventos = eventoService.findAll();
+    public List<EventoDTO> list(@RequestParam(value = "date", required = false) String dateStr) {
+        List<Evento> eventos;
+        if (dateStr != null) {
+            LocalDate date = LocalDate.parse(dateStr).atStartOfDay(ZoneId.of("UTC")).toLocalDate();
+            System.out.println("Received Date: " + date); // Añadido para depuración
+            eventos = eventoService.findByDate(date);
+        } else {
+            eventos = eventoService.findAll();
+        }
         return eventos.stream()
                 .map(Mapper::toEventoDTO)
                 .collect(Collectors.toList());

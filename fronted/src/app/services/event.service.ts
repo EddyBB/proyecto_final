@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Event } from '../models/event.model'
+import { Event } from '../models/event.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,8 @@ export class EventService {
 
   constructor(private http: HttpClient) {}
 
-  getUpcomingEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.baseUrl}`);
+  getEventsByDate(date?: string | null): Observable<Event[]> {
+    const url = date ? `${this.baseUrl}?date=${date}` : this.baseUrl;
+    return this.http.get<Event[]>(url);
   }
 }
