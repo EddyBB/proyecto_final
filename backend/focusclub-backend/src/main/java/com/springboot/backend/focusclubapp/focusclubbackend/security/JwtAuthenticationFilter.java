@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String jwt = getJwtFromRequest(request);
+        logger.debug("JWT Token from request: {}", jwt);
 
         if (jwt != null && tokenProvider.validateToken(jwt)) {
             String email = tokenProvider.getUserEmailFromJWT(jwt);
@@ -55,7 +56,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Autorización");
+        String bearerToken = request.getHeader("Authorization");
+        logger.debug("Authorization Header: {}", bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

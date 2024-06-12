@@ -7,8 +7,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8080/api'; // Ajusta la URL según tu backend
-
+  private baseUrl = 'http://localhost:8080/api';
   constructor(private http: HttpClient, private router: Router) {}
 
   register(user: any): Observable<any> {
@@ -20,7 +19,24 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+    }
     this.router.navigate(['/login']);
+  }
+
+  saveToken(token: string) {
+    localStorage.setItem('token', token);
+  }
+
+  getToken(): string | null {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token');
+    }
+    return null;
+  }
+
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }
 }

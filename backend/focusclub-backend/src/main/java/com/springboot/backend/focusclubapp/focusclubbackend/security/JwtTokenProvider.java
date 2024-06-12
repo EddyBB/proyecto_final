@@ -9,8 +9,13 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class JwtTokenProvider {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     private final Key key;
     private final int jwtExpirationInMs;
@@ -54,13 +59,15 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
+            logger.debug("Validating JWT token: {}", authToken);
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(authToken);
+            logger.debug("JWT token is valid");
             return true;
         } catch (JwtException ex) {
-            
+            logger.error("JWT token validation failed", ex);
         }
         return false;
     }

@@ -1,0 +1,11 @@
+<app-header></app-header>
+
+<div class="events-container">
+  <div class="event-card" *ngFor="let event of events">
+    <img [src]="event.imagenUrl ? event.imagenUrl : 'assets/default-image.png'" alt="Event image">
+    <h3>{{ event.nombre }}</h3>
+    <p>{{ event.fecha | date }}</p>
+  </div>
+</div>
+
+<app-footer></app-footer>

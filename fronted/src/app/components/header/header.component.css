@@ -1,0 +1,32 @@
+.header {
+  background-color: #333;
+  padding: 10px 0;
+  color: white;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.logo a {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: 20px; /* Añadir margen a la derecha */
+}
+
+.nav a {
+  margin: 0 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.auth-links a {
+  color: white;
+  text-decoration: none;
+  margin-left: 10px;
+}
