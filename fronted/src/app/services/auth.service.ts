@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private baseUrl = 'http://localhost:8080/api';
+
   constructor(private http: HttpClient, private router: Router) {}
 
   register(user: any): Observable<any> {
@@ -15,28 +16,30 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/login`, credentials);
+    return this.http.post<{ accessToken: string }>(`${this.baseUrl}/auth/login`, credentials);
   }
 
   logout() {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-    }
+    console.log('Logout called');
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 
   saveToken(token: string) {
+    console.log('Saving token:', token);
     localStorage.setItem('token', token);
   }
 
   getToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token');
-    }
-    return null;
+    const token = localStorage.getItem('token');
+    console.log('Retrieved token:', token);
+    return token;
   }
 
-  private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  isAuthenticated(): boolean {
+    const token = this.getToken();
+    const authenticated = token !== null && token !== undefined;
+    console.log('Is authenticated:', authenticated);
+    return authenticated;
   }
 }

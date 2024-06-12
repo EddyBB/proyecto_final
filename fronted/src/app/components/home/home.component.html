@@ -10,7 +10,7 @@
 </div>
 
 <div class="events-container">
-  <div class="event-card" *ngFor="let event of events">
+  <div class="event-card" *ngFor="let event of events" (click)="openEventDetails(event)">
     <img [src]="event.imagenUrl ? event.imagenUrl : 'assets/default-image.png'" alt="Event image">
     <h3>{{ event.nombre }}</h3>
     <p>{{ event.fecha | date }}</p>

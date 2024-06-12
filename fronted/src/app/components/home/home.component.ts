@@ -10,6 +10,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { EventDetailsComponent } from '../../event-details/event-details.component';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +34,7 @@ export class HomeComponent implements OnInit {
   events: Event[] = [];
   selectedDate: Date | null = null;
 
-  constructor(private eventService: EventService) {}
+  constructor(private eventService: EventService, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.loadEvents();
@@ -58,5 +60,10 @@ export class HomeComponent implements OnInit {
     this.loadEvents();
   }
   
+  openEventDetails(event: Event): void {
+    this.dialog.open(EventDetailsComponent, {
+      data: event
+    });
+  }
   
 }

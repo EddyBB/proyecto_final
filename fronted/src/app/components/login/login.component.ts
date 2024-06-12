@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-login',
@@ -15,16 +14,19 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
+  returnUrl: string;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   login() {
@@ -33,14 +35,23 @@ export class LoginComponent {
     }
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: (response) => {
-        this.authService.saveToken(response.token);
-        this.router.navigate(['/']);
+      next: (response: { accessToken: string }) => {
+        console.log('Login successful, token:', response.accessToken);
+        if (response.accessToken) {
+          this.authService.saveToken(response.accessToken);
+          this.router.navigate([this.returnUrl]);
+        } else {
+          this.errorMessage = 'No token found in response';
+        }
       },
       error: (err) => {
         console.error(err);
         this.errorMessage = 'Login failed';
       }
     });
+  }
+
+  navigateToRegister() {
+    this.router.navigate(['/register']);
   }
 }

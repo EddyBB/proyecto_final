@@ -71,8 +71,8 @@ public class CompraServiceImpl implements CompraService {
         compraDTO.setPrecioTotal(compra.getPrecioTotal());
         return compraDTO;
     }
-    
-    private Compra convertToEntity(CompraDTO compraDTO) {
+
+    public Compra convertToEntity(CompraDTO compraDTO) {
         Compra compra = new Compra();
         compra.setId(compraDTO.getIdCompra());
         compra.setCliente(clienteRepository.findById(compraDTO.getClienteId()).orElse(null));
@@ -82,6 +82,5 @@ public class CompraServiceImpl implements CompraService {
         compra.setPrecioEntrada(compraDTO.getPrecioEntrada());
         compra.setPrecioTotal(compraDTO.getPrecioTotal());
         return compra;
-    }
-    
+    }  
 }
