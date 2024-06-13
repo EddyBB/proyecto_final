@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Mis Compras</h1>
+<div mat-dialog-content>
+  <div *ngIf="compras.length === 0">
+    <p>No hay compras disponibles.</p>
+  </div>
+  <div *ngIf="compras.length > 0" class="compras-container">
+    <mat-card *ngFor="let compra of compras" class="compra-card">
+      <mat-card-header>
+        <mat-card-title>Compra ID: {{ compra.idCompra }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Fecha de compra: {{ compra.fechaCompra | date:'short' }}</p>
+        <p>Cantidad de entradas: {{ compra.cantidadEntradas }}</p>
+        <p>Precio total: {{ compra.precioTotal | currency }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="close()">Cerrar</button>
+</div>

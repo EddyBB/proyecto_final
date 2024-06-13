@@ -7,9 +7,13 @@
       <a href="/" (click)="navigateTo('/')">Inicio</a>
       <a href="/eventos" (click)="navigateTo('/eventos')">Eventos</a>
     </nav>
-    <div class="auth-links">
+    <div class="auth-links" *ngIf="!isAuthenticated">
       <a href="/login" (click)="navigateTo('/login')">Ingresar</a> |
       <a href="/register" (click)="navigateTo('/register')">Registrarse</a>
+    </div>
+    <div class="auth-links" *ngIf="isAuthenticated">
+      <a href="/profile" (click)="navigateTo('/profile')">Mi Perfil</a> |
+      <a href="#" (click)="logout()">Salir</a>
     </div>
   </div>
 </header>

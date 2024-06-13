@@ -1,9 +1,12 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.controllers;
 
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.ClienteDTO;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Cliente;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.mapper.Mapper;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.ClienteService;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.services.CompraService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,9 @@ public class ClienteController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CompraService compraService;
+
     @GetMapping
     public List<ClienteDTO> list() {
         List<Cliente> clientes = service.findAll();
@@ -50,6 +56,20 @@ public class ClienteController {
                 .body(Collections.singletonMap("error", "El usuario no se encontró"));
     }
 
+    @GetMapping("/me/compras")
+    public ResponseEntity<?> getCompras() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<Cliente> clienteOptional = service.findByEmail(email);
+        if (clienteOptional.isPresent()) {
+            Long clienteId = clienteOptional.get().getIdCliente();
+            List<CompraDTO> compras = compraService.findByClienteId(clienteId);
+            return ResponseEntity.status(HttpStatus.OK).body(compras);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap("error", "El usuario no se encontró"));
+    }
+
     @PostMapping("/{id}/imagen")
     public ResponseEntity<String> uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         Optional<Cliente> clienteOptional = service.findById(id);
@@ -64,7 +84,7 @@ public class ClienteController {
                 .body("El cliente no se encontró por el id: " + id);
     }
 
-    @PutMapping("/me")
+    @PutMapping("/update")
     public ResponseEntity<ClienteDTO> updateProfile(@RequestBody ClienteDTO clienteDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -87,7 +107,7 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @DeleteMapping("/me")
+    @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

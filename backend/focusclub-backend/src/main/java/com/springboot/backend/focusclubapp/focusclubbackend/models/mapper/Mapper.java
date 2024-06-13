@@ -1,12 +1,14 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.models.mapper;
 
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.ClienteDTO;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.EntradaDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.DiscotecaDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.EventoDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.RolDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.SalaDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Cliente;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Compra;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Entrada;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Discoteca;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Evento;
@@ -145,5 +147,17 @@ public class Mapper {
         sala.setEvento(new Evento(salaDTO.getIdEvento()));
         sala.setNombre(salaDTO.getNombre());
         return sala;
+    }
+
+    public static CompraDTO toCompraDTO(Compra compra) {
+        CompraDTO dto = new CompraDTO();
+        dto.setIdCompra(compra.getId());
+        dto.setClienteId(compra.getCliente().getIdCliente());
+        dto.setEventoId(compra.getEvento().getIdEvento());
+        dto.setFechaCompra(compra.getFechaCompra());
+        dto.setPrecioEntrada(compra.getPrecioEntrada());
+        dto.setCantidadEntradas(compra.getCantidadEntradas());
+        dto.setPrecioTotal(compra.getPrecioTotal());
+        return dto;
     }
 }

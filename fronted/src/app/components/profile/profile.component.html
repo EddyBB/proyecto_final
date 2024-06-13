@@ -1,0 +1,33 @@
+<app-header></app-header>
+
+<div class="profile-container">
+  <h2>Mi Perfil</h2>
+  <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" autocomplete="off">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Apellidos</mat-label>
+      <input matInput formControlName="apellidos" autocomplete="off">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" autocomplete="off">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono" autocomplete="off">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" formControlName="password" autocomplete="new-password">
+    </mat-form-field>
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit">Actualizar</button>
+      <button mat-raised-button color="accent" type="button" (click)="openComprasModal()">Ver Mis Compras</button>
+    </div>
+  </form>
+</div>
+
+<app-footer></app-footer>

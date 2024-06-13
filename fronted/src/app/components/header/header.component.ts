@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -9,10 +10,22 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterModule, CommonModule]
 })
-export class HeaderComponent {
-  constructor(private router: Router) {}
+export class HeaderComponent implements OnInit {
+  isAuthenticated = false;
+
+  constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit() {
+    this.authService.isAuthenticated$.subscribe(
+      isAuthenticated => this.isAuthenticated = isAuthenticated
+    );
+  }
 
   navigateTo(route: string) {
     this.router.navigate([route]);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
