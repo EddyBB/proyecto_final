@@ -35,12 +35,18 @@ export class LoginComponent {
     }
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: (response: { accessToken: string, clienteId: number }) => {
+      next: (response: { accessToken: string, clienteId: number, rol: string }) => {
         console.log('Login successful, token:', response.accessToken);
         if (response.accessToken) {
           this.authService.saveToken(response.accessToken);
           this.authService.saveClienteId(response.clienteId);
-          this.router.navigate([this.returnUrl]);
+          this.authService.saveUserRole(response.rol);
+          
+          if (response.rol === 'ADMIN') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate([this.returnUrl]);
+          }
         } else {
           this.errorMessage = 'No token found in response';
         }

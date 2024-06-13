@@ -1,0 +1,29 @@
+.admin-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .card-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    width: 200px;
+    height: 150px;
+    margin: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    background-color: #ddd;
+  }
+  

@@ -47,7 +47,8 @@ public class AuthController {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Long clienteId = userDetails.getCliente().getIdCliente();
+        String role = userDetails.getCliente().getRol().getTipoRol();
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, clienteId));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, clienteId, role));
     }
 }

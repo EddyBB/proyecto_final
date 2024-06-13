@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private baseUrl = 'http://localhost:8080/api';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  private userRoleSubject = new BehaviorSubject<string | null>(this.getUserRole());
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -17,22 +18,25 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<any> {
-    return this.http.post<{ accessToken: string, clienteId: number }>(`${this.baseUrl}/auth/login`, credentials).pipe(
+    return this.http.post<{ accessToken: string, clienteId: number, rol: string }>(`${this.baseUrl}/auth/login`, credentials).pipe(
       tap(response => {
         this.saveToken(response.accessToken);
         this.saveClienteId(response.clienteId);
+        this.saveUserRole(response.rol);
         this.isAuthenticatedSubject.next(true);
+        this.userRoleSubject.next(response.rol);
       })
     );
   }
 
   logout() {
-    console.log('Logout called');
     if (this.isBrowser()) {
       localStorage.removeItem('token');
       localStorage.removeItem('clienteId');
+      localStorage.removeItem('userRole');
     }
     this.isAuthenticatedSubject.next(false);
+    this.userRoleSubject.next(null);
     this.router.navigate(['/']);
   }
 
@@ -47,6 +51,13 @@ export class AuthService {
     if (this.isBrowser()) {
       console.log('Saving clienteId:', clienteId);
       localStorage.setItem('clienteId', clienteId.toString());
+    }
+  }
+
+  saveUserRole(role: string) {
+    if (this.isBrowser()) {
+      console.log('Saving role:', role);
+      localStorage.setItem('userRole', role);
     }
   }
 
@@ -68,6 +79,10 @@ export class AuthService {
     return null;
   }
 
+  getUserRole(): string | null {
+    return this.isBrowser() ? localStorage.getItem('userRole') : null;
+  }
+
   isAuthenticated(): boolean {
     const token = this.getToken();
     console.log('Token in isAuthenticated:', token);
@@ -80,6 +95,10 @@ export class AuthService {
 
   get isAuthenticated$(): Observable<boolean> {
     return this.isAuthenticatedSubject.asObservable();
+  }
+
+  get userRole$(): Observable<string | null> {
+    return this.userRoleSubject.asObservable();
   }
 
   private isBrowser(): boolean {
