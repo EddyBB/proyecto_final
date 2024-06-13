@@ -33,7 +33,7 @@ export class AuthService {
       localStorage.removeItem('clienteId');
     }
     this.isAuthenticatedSubject.next(false);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 
   saveToken(token: string) {

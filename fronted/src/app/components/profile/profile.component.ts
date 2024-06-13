@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.authService.isAuthenticated$.subscribe(isAuthenticated => {
       if (!isAuthenticated) {
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/']);
       } else {
         this.loadUserProfile();
       }
