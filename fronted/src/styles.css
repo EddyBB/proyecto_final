@@ -1,74 +1,162 @@
-/* You can add global styles to this file, and also import other style files */
-/* src/styles.css */
-
+/* General styles */
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
-  }
-  
-  .container {
-    display: flex;
-    justify-content: center;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Header styles */
+header {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+}
+
+header .nav-links {
+  display: flex;
+  justify-content: space-around;
+}
+
+header a {
+  color: white;
+  text-decoration: none;
+  padding: 0 15px;
+}
+
+@media (max-width: 600px) {
+  header .nav-links {
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
   }
-  
+
+  header a {
+    padding: 10px 0;
+  }
+}
+
+/* Footer styles */
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+}
+
+@media (max-width: 600px) {
+  footer {
+    font-size: 12px;
+    padding: 10px 5px;
+  }
+}
+
+/* Card styles */
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 20px;
+  padding: 10px;
+  background-color: white;
+}
+
+@media (max-width: 600px) {
   .card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    max-width: 400px;
-    width: 100%;
+    margin: 10px;
+    padding: 10px;
   }
-  
-  .card h2 {
-    margin-bottom: 1.5rem;
-    color: #333;
-    text-align: center;
+}
+
+/* General form field styling */
+.mat-form-field {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .mat-form-field {
+    margin-bottom: 20px;
   }
-  
-  .card form div {
-    margin-bottom: 1rem;
+}
+
+/* Container styles */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Form styles */
+form div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  color: #333;
+}
+
+input:focus {
+  border-color: #007BFF;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+}
+
+small {
+  color: #e74c3c;
+  font-size: 12px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007BFF;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+button:not(:disabled):hover {
+  background-color: #0056b3;
+}
+
+
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
   }
-  
-  .card label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #555;
-  }
-  
-  .card input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  .card button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  
-  .card button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  .card small {
-    color: #e74c3c;
-    display: block;
-    margin-top: 0.5rem;
-  }
-  
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+}

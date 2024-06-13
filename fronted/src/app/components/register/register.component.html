@@ -32,6 +32,7 @@
           <input id="telefono" formControlName="telefono" type="text">
           <div *ngIf="registerForm.controls['telefono'].touched && registerForm.controls['telefono'].invalid">
             <small *ngIf="registerForm.controls['telefono'].errors?.['required']">Teléfono es requerido</small>
+            <small *ngIf="registerForm.controls['telefono'].errors?.['pattern']">Teléfono debe contener 9 dígitos</small>
           </div>
         </div>
   
