@@ -71,9 +71,13 @@ export class EventDetailsComponent {
 
   buy(): void {
     console.log('Buy button clicked');
+    const token = this.authService.getToken();
+    console.log('Retrieved token:', token);
+
     if (!this.authService.isAuthenticated()) {
       console.log('User not authenticated, redirecting to login');
-      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+      this.close();
+      this.router.navigate(['/login']);
     } else {
       console.log('User is authenticated, opening compra modal');
       this.dialog.open(CompraModalComponent, {
