@@ -2,6 +2,7 @@ package com.springboot.backend.focusclubapp.focusclubbackend.controllers;
 
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.JwtAuthenticationResponse;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.LoginRequest;
+import com.springboot.backend.focusclubapp.focusclubbackend.security.CustomUserDetails;
 import com.springboot.backend.focusclubapp.focusclubbackend.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,10 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken(authentication);
         System.out.println("Generated JWT: " + jwt);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long clienteId = userDetails.getCliente().getIdCliente();
+
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, clienteId));
     }
 }

@@ -52,18 +52,17 @@ export class HomeComponent implements OnInit {
             this.events = data;
         });
     }
-}
-
+  }
 
   onDateChange(event: any) {
     this.selectedDate = event.value;
     this.loadEvents();
   }
-  
+
   openEventDetails(event: Event): void {
+    console.log('Opening event details for:', event); // Verificar el evento aquí
     this.dialog.open(EventDetailsComponent, {
       data: event
     });
   }
-  
 }

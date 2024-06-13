@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -16,12 +16,18 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<any> {
-    return this.http.post<{ accessToken: string }>(`${this.baseUrl}/auth/login`, credentials);
+    return this.http.post<{ accessToken: string, clienteId: number }>(`${this.baseUrl}/auth/login`, credentials).pipe(
+      tap(response => {
+        this.saveToken(response.accessToken);
+        this.saveClienteId(response.clienteId);
+      })
+    );
   }
 
   logout() {
     console.log('Logout called');
     localStorage.removeItem('token');
+    localStorage.removeItem('clienteId');
     this.router.navigate(['/login']);
   }
 
@@ -30,10 +36,21 @@ export class AuthService {
     localStorage.setItem('token', token);
   }
 
+  saveClienteId(clienteId: number) {
+    console.log('Saving clienteId:', clienteId);
+    localStorage.setItem('clienteId', clienteId.toString());
+  }
+
   getToken(): string | null {
     const token = localStorage.getItem('token');
     console.log('Retrieved token:', token);
     return token;
+  }
+
+  getClienteId(): number | null {
+    const clienteId = localStorage.getItem('clienteId');
+    console.log('Retrieved clienteId:', clienteId);
+    return clienteId ? parseInt(clienteId) : null;
   }
 
   isAuthenticated(): boolean {

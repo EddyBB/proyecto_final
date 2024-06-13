@@ -47,6 +47,10 @@ public class CompraController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         compraDTO.setClienteId(userDetails.getCliente().getIdCliente());
 
+        if (compraDTO.getEventoId() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
         CompraDTO savedCompra = compraService.save(compraDTO);
 
         try {

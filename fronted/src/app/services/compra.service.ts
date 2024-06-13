@@ -10,9 +10,9 @@ export class CompraService {
 
   constructor(private http: HttpClient) {}
 
-  comprar(eventId: number, cantidadEntradas: number): Observable<any> {
+  comprar(compraData: { clienteId: number, eventoId: number, cantidadEntradas: number, fechaCompra: string }): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.baseUrl}/comprar`, { eventId, cantidadEntradas }, { headers });
+    return this.http.post(`${this.baseUrl}/comprar`, compraData, { headers });
   }
 }

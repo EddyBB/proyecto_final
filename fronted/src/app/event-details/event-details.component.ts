@@ -80,8 +80,9 @@ export class EventDetailsComponent {
       this.router.navigate(['/login']);
     } else {
       console.log('User is authenticated, opening compra modal');
+      console.log('Event ID:', this.data.idEvento); // Log para verificar eventId antes de abrir el modal
       this.dialog.open(CompraModalComponent, {
-        data: { eventId: this.data.id }
+        data: { eventId: this.data.idEvento } // Asegúrate de que el eventId se pasa correctamente aquí
       });
     }
   }

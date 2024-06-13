@@ -3,9 +3,11 @@ package com.springboot.backend.focusclubapp.focusclubbackend.models.dto;
 public class JwtAuthenticationResponse {
     private String accessToken;
     private String tokenType = "Bearer";
+    private Long clienteId;
 
-    public JwtAuthenticationResponse(String accessToken) {
+    public JwtAuthenticationResponse(String accessToken, Long clienteId) {
         this.accessToken = accessToken;
+        this.clienteId = clienteId;
     }
 
     public String getAccessToken() {
@@ -22,5 +24,13 @@ public class JwtAuthenticationResponse {
 
     public void setTokenType(String tokenType) {
         this.tokenType = tokenType;
+    }
+
+    public Long getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(Long clienteId) {
+        this.clienteId = clienteId;
     }
 }
