@@ -75,12 +75,23 @@ public class CompraServiceImpl implements CompraService {
     public Compra convertToEntity(CompraDTO compraDTO) {
         Compra compra = new Compra();
         compra.setId(compraDTO.getIdCompra());
-        compra.setCliente(clienteRepository.findById(compraDTO.getClienteId()).orElse(null));
-        compra.setEvento(eventoRepository.findById(compraDTO.getEventoId()).orElse(null));
+        
+        if (compraDTO.getClienteId() != null) {
+            compra.setCliente(clienteRepository.findById(compraDTO.getClienteId()).orElseThrow(() -> new IllegalArgumentException("Client ID not found")));
+        } else {
+            throw new IllegalArgumentException("Client ID must not be null");
+        }
+        
+        if (compraDTO.getEventoId() != null) {
+            compra.setEvento(eventoRepository.findById(compraDTO.getEventoId()).orElseThrow(() -> new IllegalArgumentException("Event ID not found")));
+        } else {
+            throw new IllegalArgumentException("Event ID must not be null");
+        }
+        
         compra.setFechaCompra(compraDTO.getFechaCompra());
         compra.setCantidadEntradas(compraDTO.getCantidadEntradas());
         compra.setPrecioEntrada(compraDTO.getPrecioEntrada());
         compra.setPrecioTotal(compraDTO.getPrecioTotal());
         return compra;
-    }  
+    }
 }

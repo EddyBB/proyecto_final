@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -20,9 +21,10 @@ public class JwtTokenProvider {
     private final Key key;
     private final int jwtExpirationInMs;
 
-    public JwtTokenProvider(@Value("${app.jwt-expiration-ms}") int jwtExpirationInMs) {
+    public JwtTokenProvider(@Value("${app.jwtSecret}") String jwtSecret, @Value("${app.jwt-expiration-ms}") int jwtExpirationInMs) {
         this.jwtExpirationInMs = jwtExpirationInMs;
-        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512); // Genera una clave segura automáticamente
+        byte[] decodedKey = Base64.getDecoder().decode(jwtSecret);
+        this.key = Keys.hmacShaKeyFor(decodedKey);
     }
 
     public String generateToken(Authentication authentication) {
@@ -34,7 +36,7 @@ public class JwtTokenProvider {
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
-                .signWith(key, SignatureAlgorithm.HS512) // Usa la clave segura generada
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
