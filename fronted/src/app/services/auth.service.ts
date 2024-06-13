@@ -80,7 +80,9 @@ export class AuthService {
   }
 
   getUserRole(): string | null {
-    return this.isBrowser() ? localStorage.getItem('userRole') : null;
+    const role = this.isBrowser() ? localStorage.getItem('userRole') : null;
+    console.log('Retrieved userRole:', role); // Log para verificar el rol del usuario
+    return role;
   }
 
   isAuthenticated(): boolean {

@@ -9,9 +9,11 @@ export const adminGuard = () => {
 
   return authService.userRole$.pipe(
     map(role => {
+      console.log('adminGuard - role:', role); // Log para verificar el rol
       if (role === 'ADMIN') {
         return true;
       } else {
+        console.log('adminGuard - not admin, redirecting to home'); // Log para redirección
         router.navigate(['/']);
         return false;
       }
