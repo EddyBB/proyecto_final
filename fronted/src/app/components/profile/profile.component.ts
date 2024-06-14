@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { ComprasUsuarioModalComponent } from '../compras-usuario-modal/compras-usuario-modal.component';
+import { PasswordModalComponent } from '../password-modal/password-modal.component';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 
@@ -43,8 +44,7 @@ export class ProfileComponent implements OnInit {
       nombre: ['', Validators.required],
       apellidos: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      telefono: ['', Validators.required],
-      password: ['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
       imagenPerfil: ['']
     });
   }
@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit {
     this.clienteService.getProfile().subscribe({
       next: data => {
         this.userProfile = data;
-        this.profileForm.patchValue({ ...this.userProfile, password: '' }); // Ensure password is empty
+        this.profileForm.patchValue(this.userProfile);
       },
       error: err => {
         console.error('Error loading user profile', err);
@@ -72,11 +72,13 @@ export class ProfileComponent implements OnInit {
   }
 
   updateProfile() {
-    if (this.profileForm.valid && this.profileForm.dirty) { // Check if form is dirty
-      this.clienteService.updateProfile(this.profileForm.value).subscribe({
+    if (this.profileForm.valid && this.profileForm.dirty) {
+      const updatedProfile = { ...this.userProfile, ...this.profileForm.value };
+      delete updatedProfile.password; // Eliminar la contraseña del objeto actualizado
+      this.clienteService.updateProfile(updatedProfile).subscribe({
         next: response => {
           console.log('Profile updated successfully', response);
-          this.profileForm.markAsPristine(); // Mark form as pristine after successful update
+          this.profileForm.markAsPristine();
         },
         error: err => {
           console.error('Error updating profile', err);
@@ -91,6 +93,25 @@ export class ProfileComponent implements OnInit {
     this.dialog.open(ComprasUsuarioModalComponent, {
       width: '80%',
       data: { clienteId: this.userProfile.idCliente }
+    });
+  }
+
+  openPasswordModal(): void {
+    const dialogRef = this.dialog.open(PasswordModalComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(newPassword => {
+      if (newPassword) {
+        this.clienteService.updateProfile({ ...this.userProfile, password: newPassword }).subscribe({
+          next: response => {
+            console.log('Password updated successfully', response);
+          },
+          error: err => {
+            console.error('Error updating password', err);
+          }
+        });
+      }
     });
   }
 }

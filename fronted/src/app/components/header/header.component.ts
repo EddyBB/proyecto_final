@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   }
 
   navigateTo(route: string) {
-    this.router.navigate([route]);
+    this.router.navigate(['/profile']);
   }
 
   logout() {

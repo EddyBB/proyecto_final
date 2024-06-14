@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminProfileComponent } from './admin-profile.component';
+import { PasswordModalComponent } from './password-modal.component';
 
-describe('AdminProfileComponent', () => {
-  let component: AdminProfileComponent;
-  let fixture: ComponentFixture<AdminProfileComponent>;
+describe('PasswordModalComponent', () => {
+  let component: PasswordModalComponent;
+  let fixture: ComponentFixture<PasswordModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminProfileComponent]
+      imports: [PasswordModalComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AdminProfileComponent);
+    fixture = TestBed.createComponent(PasswordModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

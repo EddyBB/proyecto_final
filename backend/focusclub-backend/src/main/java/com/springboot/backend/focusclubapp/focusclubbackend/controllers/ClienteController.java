@@ -89,17 +89,22 @@ public class ClienteController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Optional<Cliente> clienteOptional = service.findByEmail(email);
-
+    
         if (clienteOptional.isPresent()) {
             Cliente clienteDb = clienteOptional.get();
             clienteDb.setNombre(clienteDTO.getNombre());
             clienteDb.setApellidos(clienteDTO.getApellidos());
             clienteDb.setEmail(clienteDTO.getEmail());
             clienteDb.setTelefono(clienteDTO.getTelefono());
-            clienteDb.setPassword(passwordEncoder.encode(clienteDTO.getPassword())); // Encriptar la contraseña
+    
+            // Check if the password is not empty before updating it
+            if (clienteDTO.getPassword() != null && !clienteDTO.getPassword().isEmpty()) {
+                clienteDb.setPassword(passwordEncoder.encode(clienteDTO.getPassword())); // Encriptar la contraseña solo si no está vacía
+            }
+    
             clienteDb.setRol(service.getDefaultRol());
             clienteDb.setImagenPerfil(clienteDTO.getImagenPerfil()); // Asegúrate de incluir este campo en ClienteDTO
-
+    
             Cliente clienteUpdated = service.save(clienteDb);
             ClienteDTO clienteUpdatedDTO = Mapper.toClienteDTO(clienteUpdated);
             return ResponseEntity.ok(clienteUpdatedDTO);

@@ -14,15 +14,6 @@ export class AdminHeaderComponent {
 
   constructor(private router: Router, private authService: AuthService) {}
 
-  navigateTo(route: string) {
-    this.router.navigate(['/admin']);
-  }
-
-  navigateToAdminProfile() {
-    console.log('Navigating to admin profile'); // Log para verificar la navegación
-    this.router.navigate(['/admin/profile']);
-  }
-
   logout() {
     this.authService.logout();
   }
