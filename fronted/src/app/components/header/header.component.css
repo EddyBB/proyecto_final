@@ -30,3 +30,39 @@
   text-decoration: none;
   margin-left: 10px;
 }
+
+.search-container {
+  position: relative;
+  width: 250px;
+}
+
+.search-container input[type="text"] {
+  width: 100%;
+  padding: 8px 12px 8px 35px; /* Ajusta el padding para el icono */
+  border-radius: 20px;
+  border: none;
+  background-color: #f1f1f1;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.search-container input[type="text"]:focus {
+  outline: none;
+  background-color: #e0e0e0;
+}
+
+.search-container input[type="text"]::placeholder {
+  color: #888;
+  font-style: italic;
+}
+
+.search-container::before {
+  font-family: "Font Awesome 5 Free"; /* Asegúrate de que Font Awesome esté cargado */
+  font-weight: 900;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 14px; /* Ajusta el tamaño del icono */
+}

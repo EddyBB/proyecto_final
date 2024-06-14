@@ -15,4 +15,9 @@ export class EventService {
     const url = date ? `${this.baseUrl}?date=${date}` : this.baseUrl;
     return this.http.get<Event[]>(url);
   }
+
+  getEventsBySearchQuery(query: string): Observable<Event[]> {
+    const url = `${this.baseUrl}?search=${query}`;
+    return this.http.get<Event[]>(url);
+  }
 }

@@ -63,6 +63,12 @@ public class Mapper {
         eventoDTO.setFecha(evento.getFecha());
         eventoDTO.setPrecio(evento.getPrecio());
         eventoDTO.setImagenUrl(evento.getImagenUrl());
+        
+        // Añadir el nombre de la discoteca si está disponible
+        if (evento.getSalas() != null && !evento.getSalas().isEmpty()) {
+            eventoDTO.setNombreDiscoteca(evento.getSalas().get(0).getDiscoteca().getNombre());
+        }
+        
         return eventoDTO;
     }
 

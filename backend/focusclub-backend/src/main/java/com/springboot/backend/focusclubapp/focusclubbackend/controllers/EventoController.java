@@ -28,7 +28,6 @@ public class EventoController {
         List<Evento> eventos;
         if (dateStr != null) {
             LocalDate date = LocalDate.parse(dateStr).atStartOfDay(ZoneId.of("UTC")).toLocalDate();
-            System.out.println("Received Date: " + date); // Añadido para depuración
             eventos = eventoService.findByDate(date);
         } else {
             eventos = eventoService.findAll();

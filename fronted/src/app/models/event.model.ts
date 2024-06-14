@@ -7,4 +7,5 @@ export interface Event {
   imagenUrl: string;
   aforo: number;
   entradasDisponibles: number;
+  nombreDiscoteca: string;
 }

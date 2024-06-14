@@ -1,15 +1,18 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.models.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "eventos")
@@ -40,13 +43,16 @@ public class Evento implements Serializable {
     @Column(length = 255)
     private String imagenUrl;
 
+    @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY)
+    private List<Sala> salas;
+
     // Constructor con solo id
     public Evento(Long idEvento) {
         this.idEvento = idEvento;
     }
 
     // Constructor con argumentos
-    public Evento(Long idEvento, String nombre, Integer entradasDisponibles, String descripcion, Integer aforo, LocalDate fecha, BigDecimal precio, String imagenUrl) {
+    public Evento(Long idEvento, String nombre, Integer entradasDisponibles, String descripcion, Integer aforo, LocalDate fecha, BigDecimal precio, String imagenUrl, List<Sala> salas) {
         this.idEvento = idEvento;
         this.nombre = nombre;
         this.entradasDisponibles = entradasDisponibles;
@@ -55,6 +61,7 @@ public class Evento implements Serializable {
         this.fecha = fecha;
         this.precio = precio;
         this.imagenUrl = imagenUrl;
+        this.salas = salas;
     }
 
     // Constructor sin argumentos
@@ -124,6 +131,14 @@ public class Evento implements Serializable {
 
     public void setImagenUrl(String imagenUrl) {
         this.imagenUrl = imagenUrl;
+    }
+
+    public List<Sala> getSalas() {
+        return salas;
+    }
+
+    public void setSalas(List<Sala> salas) {
+        this.salas = salas;
     }
 
     // toString

@@ -12,6 +12,7 @@ public class EventoDTO {
     private LocalDate fecha;
     private BigDecimal precio;
     private String imagenUrl;
+    private String nombreDiscoteca;
 
     // Getters y Setters
     public Long getIdEvento() {
@@ -76,5 +77,13 @@ public class EventoDTO {
 
     public void setImagenUrl(String imagenUrl) {
         this.imagenUrl = imagenUrl;
+    }
+
+    public String getNombreDiscoteca() {
+        return nombreDiscoteca;
+    }
+
+    public void setNombreDiscoteca(String nombreDiscoteca) {
+        this.nombreDiscoteca = nombreDiscoteca;
     }
 }

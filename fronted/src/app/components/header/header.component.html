@@ -7,6 +7,9 @@
       <a href="/" (click)="navigateTo('/')">Inicio</a>
       <a href="/eventos" (click)="navigateTo('/eventos')">Eventos</a>
     </nav>
+    <div class="search-container">
+      <input type="text" placeholder="Buscar discoteca" [(ngModel)]="searchQuery" (input)="onSearchChange()">
+    </div>
     <div class="auth-links" *ngIf="!isAuthenticated">
       <a href="/login" (click)="navigateTo('/login')">Ingresar</a> |
       <a href="/register" (click)="navigateTo('/register')">Registrarse</a>

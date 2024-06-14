@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header (searchQueryChange)="onSearchQueryChange($event)"></app-header>
 
 <div class="date-picker-container">
   <mat-form-field appearance="fill">
@@ -10,10 +10,11 @@
 </div>
 
 <div class="events-container">
-  <div class="event-card" *ngFor="let event of events" (click)="openEventDetails(event)">
+  <div class="event-card" *ngFor="let event of filteredEvents" (click)="openEventDetails(event)">
     <img [src]="event.imagenUrl ? event.imagenUrl : 'assets/default-image.png'" alt="Event image">
     <h3>{{ event.nombre }}</h3>
     <p>{{ event.fecha | date }}</p>
+    <p>{{ event.nombreDiscoteca }}</p>
     <p class="no-entradas" *ngIf="event.entradasDisponibles <= 0">No quedan entradas disponibles</p>
   </div>
 </div>
