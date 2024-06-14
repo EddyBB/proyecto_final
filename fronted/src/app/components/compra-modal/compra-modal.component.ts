@@ -73,12 +73,24 @@ export class CompraModalComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     paypal.Buttons({
       createOrder: (data: any, actions: any) => {
-        return actions.order.create({
-          purchase_units: [{
-            amount: {
-              value: this.data.precio * this.cantidadEntradas // Total a pagar
-            }
-          }]
+        // Validar la cantidad de entradas disponibles antes de crear el pedido
+        return this.compraService.verificarDisponibilidad(this.data.eventId, this.cantidadEntradas).toPromise().then(disponible => {
+          if (disponible) {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: this.data.precio * this.cantidadEntradas // Total a pagar
+                }
+              }]
+            });
+          } else {
+            this.snackBar.open('No hay suficientes entradas disponibles.', 'Cerrar', {
+              duration: 3000,
+              verticalPosition: 'top',
+              horizontalPosition: 'center'
+            });
+            throw new Error('No hay suficientes entradas disponibles.');
+          }
         });
       },
       onApprove: (data: any, actions: any) => {

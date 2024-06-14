@@ -15,4 +15,8 @@ export class CompraService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post(`${this.baseUrl}/comprar`, compraData, { headers });
   }
+
+  verificarDisponibilidad(eventoId: number, cantidad: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseUrl}/verificar-disponibilidad?eventoId=${eventoId}&cantidad=${cantidad}`);
+  }
 }
