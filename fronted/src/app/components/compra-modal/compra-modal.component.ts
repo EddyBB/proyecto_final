@@ -103,7 +103,7 @@ export class CompraModalComponent {
           },
           error: err => {
             console.error('Error al realizar la compra:', err);
-            this.snackBar.open('Error al realizar la compra. Inténtalo de nuevo o más tarde.', 'Cerrar', {
+            this.snackBar.open(err.error || 'Error al realizar la compra. Inténtalo de nuevo o más tarde.', 'Cerrar', {
               duration: 3000,
               verticalPosition: 'top',
               horizontalPosition: 'center'

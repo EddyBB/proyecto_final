@@ -42,18 +42,18 @@ public class CompraController {
     }
 
     @PostMapping("/comprar")
-    public ResponseEntity<CompraDTO> realizarCompra(@RequestBody CompraDTO compraDTO) {
+    public ResponseEntity<?> realizarCompra(@RequestBody CompraDTO compraDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         compraDTO.setClienteId(userDetails.getCliente().getIdCliente());
-
+    
         if (compraDTO.getEventoId() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ID del evento es requerido.");
         }
-
-        CompraDTO savedCompra = compraService.save(compraDTO);
-
+    
         try {
+            CompraDTO savedCompra = compraService.save(compraDTO);
+    
             ByteArrayOutputStream pdfBytes = PdfGenerator.generatePdf(compraService.convertToEntity(savedCompra));
             emailService.sendEmailWithAttachment(
                     userDetails.getCliente().getEmail(),
@@ -62,10 +62,13 @@ public class CompraController {
                     pdfBytes.toByteArray(),
                     "compra.pdf"
             );
+    
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedCompra);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (IOException | com.google.zxing.WriterException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el PDF o enviar el correo.");
         }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCompra);
     }
+    
 }

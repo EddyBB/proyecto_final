@@ -35,6 +35,17 @@ public class CompraServiceImpl implements CompraService {
     public CompraDTO save(CompraDTO compraDTO) {
         Compra compra = convertToEntity(compraDTO);
         if (compra.getEvento() != null) {
+            // Verificar si hay suficientes entradas disponibles
+            int entradasDisponibles = compra.getEvento().getEntradasDisponibles();
+            if (compra.getCantidadEntradas() > entradasDisponibles) {
+                throw new IllegalArgumentException("No hay suficientes entradas disponibles.");
+            }
+
+            // Actualizar entradas disponibles y aforo
+            compra.getEvento().setEntradasDisponibles(entradasDisponibles - compra.getCantidadEntradas());
+            compra.getEvento().setAforo(compra.getEvento().getAforo() - compra.getCantidadEntradas());
+            eventoRepository.save(compra.getEvento());
+
             compra.setPrecioEntrada(compra.getEvento().getPrecio());
             compra.setPrecioTotal(compra.getPrecioEntrada().multiply(BigDecimal.valueOf(compra.getCantidadEntradas())));
         }

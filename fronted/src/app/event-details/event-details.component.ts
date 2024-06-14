@@ -16,8 +16,9 @@ import { CompraModalComponent } from '../components/compra-modal/compra-modal.co
         <p><strong>Fecha:</strong> {{ data.fecha | date }}</p>
         <p><strong>Precio:</strong> {{ data.precio | currency }}</p>
         <img [src]="data.imagenUrl || 'assets/default-image.png'" alt="Event image">
+        <p *ngIf="data.entradasDisponibles <= 0" class="no-entradas">No quedan entradas disponibles</p>
         <div class="event-details-actions">
-          <button mat-raised-button color="primary" (click)="buy()">Comprar</button>
+          <button mat-raised-button color="primary" (click)="buy()" [disabled]="data.entradasDisponibles <= 0">Comprar</button>
           <button mat-raised-button (click)="close()">Cerrar</button>
         </div>
       </div>
@@ -48,6 +49,11 @@ import { CompraModalComponent } from '../components/compra-modal/compra-modal.co
       display: flex;
       justify-content: space-between;
       margin-top: 20px;
+    }
+    .no-entradas {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
     }
     button {
       width: 100px;
@@ -82,7 +88,7 @@ export class EventDetailsComponent {
       console.log('User is authenticated, opening compra modal');
       console.log('Event ID:', this.data.idEvento); // Log para verificar eventId antes de abrir el modal
       this.dialog.open(CompraModalComponent, {
-        data: { eventId: this.data.idEvento } // Asegúrate de que el eventId se pasa correctamente aquí
+        data: { eventId: this.data.idEvento, entradasDisponibles: this.data.entradasDisponibles } // Asegúrate de que el eventId y entradasDisponibles se pasan correctamente aquí
       });
     }
   }
