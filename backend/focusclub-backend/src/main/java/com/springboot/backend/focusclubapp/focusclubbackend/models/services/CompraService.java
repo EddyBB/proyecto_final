@@ -13,5 +13,7 @@ public interface CompraService {
     void deleteById(Long id);
     Optional<CompraDTO> findById(Long id);
     Compra convertToEntity(CompraDTO compraDTO);
+    boolean verificarDisponibilidad(Long eventoId, int cantidad); // Nuevo método
 }
+
 

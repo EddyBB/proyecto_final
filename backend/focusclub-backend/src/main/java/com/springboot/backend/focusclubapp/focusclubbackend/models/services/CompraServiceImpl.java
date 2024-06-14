@@ -7,6 +7,7 @@ import com.springboot.backend.focusclubapp.focusclubbackend.models.dao.ICompraDa
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dao.IEventoDao;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Compra;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Evento;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -69,6 +70,12 @@ public class CompraServiceImpl implements CompraService {
     @Override
     public Optional<CompraDTO> findById(Long id) {
         return compraRepository.findById(id).map(this::convertToDTO);
+    }
+
+    @Override
+    public boolean verificarDisponibilidad(Long eventoId, int cantidad) {
+        Optional<Evento> evento = eventoRepository.findById(eventoId);
+        return evento.isPresent() && evento.get().getEntradasDisponibles() >= cantidad;
     }
 
     private CompraDTO convertToDTO(Compra compra) {

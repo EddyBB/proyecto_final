@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
@@ -39,6 +40,12 @@ public class CompraController {
 
         List<CompraDTO> compras = compraService.findByClienteId(clienteId);
         return ResponseEntity.ok(compras);
+    }
+
+    @GetMapping("/verificar-disponibilidad")
+    public ResponseEntity<Boolean> verificarDisponibilidad(@RequestParam Long eventoId, @RequestParam int cantidad) {
+        boolean disponible = compraService.verificarDisponibilidad(eventoId, cantidad);
+        return ResponseEntity.ok(disponible);
     }
 
     @PostMapping("/comprar")
