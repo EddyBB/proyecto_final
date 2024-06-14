@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,6 +10,8 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
+declare var paypal: any; // Declarar el objeto paypal
+
 @Component({
   selector: 'app-compra-modal',
   template: `
@@ -19,9 +21,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
         <mat-label>Cantidad de Entradas</mat-label>
         <input matInput type="number" [(ngModel)]="cantidadEntradas" min="1">
       </mat-form-field>
+      <div id="paypal-button-container"></div>
       <div class="compra-modal-actions">
         <button mat-button (click)="close()">Cancelar</button>
-        <button mat-raised-button color="primary" (click)="buy()">Comprar</button>
       </div>
     </div>
   `,
@@ -38,6 +40,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
       width: 100%;
       margin-top: 20px;
     }
+    .no-entradas {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+    }
   `],
   standalone: true,
   imports: [
@@ -50,7 +57,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule
   ]
 })
-export class CompraModalComponent {
+export class CompraModalComponent implements AfterViewInit {
+  @Output() compraRealizada = new EventEmitter<void>(); // Añadido EventEmitter
   cantidadEntradas = 1;
 
   constructor(
@@ -60,64 +68,80 @@ export class CompraModalComponent {
     private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) {
-    console.log('Constructor data:', this.data); // Verifica si el eventId está presente en el constructor
+  ) {}
+
+  ngAfterViewInit(): void {
+    paypal.Buttons({
+      createOrder: (data: any, actions: any) => {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: this.data.precio * this.cantidadEntradas // Total a pagar
+            }
+          }]
+        });
+      },
+      onApprove: (data: any, actions: any) => {
+        return actions.order.capture().then((details: any) => {
+          this.processPurchase();
+        });
+      },
+      onError: (err: any) => {
+        console.error(err);
+        this.snackBar.open('Error al realizar el pago con PayPal. Inténtalo de nuevo.', 'Cerrar', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center'
+        });
+      }
+    }).render('#paypal-button-container');
   }
 
   close(): void {
     this.dialogRef.close();
   }
 
-  buy(): void {
-    if (!this.authService.isAuthenticated()) {
-      console.log('User not authenticated, redirecting to login');
-      this.dialogRef.close();
-      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+  processPurchase(): void {
+    const clienteId = this.authService.getClienteId();
+    const eventoId = this.data.eventId;
+    const cantidad = this.cantidadEntradas;
+    const fechaCompra = new Date();
+
+    if (clienteId && eventoId) {
+      const compraData = {
+        clienteId: clienteId,
+        eventoId: eventoId,
+        cantidadEntradas: cantidad,
+        fechaCompra: fechaCompra.toISOString()
+      };
+
+      this.compraService.comprar(compraData).subscribe({
+        next: response => {
+          console.log('Compra exitosa:', response);
+          this.snackBar.open('Compra exitosa', 'Cerrar', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center'
+          });
+          this.compraRealizada.emit(); // Emitir evento de compra realizada
+          this.dialogRef.close();
+        },
+        error: err => {
+          console.error('Error al realizar la compra:', err);
+          this.snackBar.open(err.error || 'Error al realizar la compra. Inténtalo de nuevo o más tarde.', 'Cerrar', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center'
+          });
+        }
+      });
     } else {
-      const clienteId = this.authService.getClienteId();
-      const eventoId = this.data.eventId;  // Cambia idEvento a eventId
-      const cantidad = this.cantidadEntradas;
-      const fechaCompra = new Date();  // Añade la fecha de compra actual
-
-      console.log('Retrieved clienteId:', clienteId); // Log para verificar clienteId
-      console.log('Retrieved eventoId:', eventoId); // Log para verificar eventoId
-      console.log('Fecha de compra:', fechaCompra); // Log para verificar fechaCompra
-
-      if (clienteId && eventoId) {
-        const compraData = {
-          clienteId: clienteId,
-          eventoId: eventoId,
-          cantidadEntradas: cantidad,
-          fechaCompra: fechaCompra.toISOString()  // Formatea la fecha a ISO string
-        };
-
-        this.compraService.comprar(compraData).subscribe({
-          next: response => {
-            console.log('Compra exitosa:', response);
-            this.snackBar.open('Compra exitosa', 'Cerrar', {
-              duration: 3000,
-              verticalPosition: 'top',
-              horizontalPosition: 'center'
-            });
-            this.dialogRef.close();
-          },
-          error: err => {
-            console.error('Error al realizar la compra:', err);
-            this.snackBar.open(err.error || 'Error al realizar la compra. Inténtalo de nuevo o más tarde.', 'Cerrar', {
-              duration: 3000,
-              verticalPosition: 'top',
-              horizontalPosition: 'center'
-            });
-          }
-        });
-      } else {
-        console.error('Cliente ID or Event ID is null');
-        this.snackBar.open('Cliente ID o Event ID es nulo. Inténtalo de nuevo.', 'Cerrar', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center'
-        });
-      }
+      console.error('Cliente ID or Event ID is null');
+      this.snackBar.open('Cliente ID o Event ID es nulo. Inténtalo de nuevo.', 'Cerrar', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center'
+      });
     }
   }
 }

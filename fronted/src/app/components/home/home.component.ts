@@ -6,12 +6,12 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { EventService } from '../../services/event.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { EventDetailsComponent } from '../../event-details/event-details.component';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-home',
@@ -42,15 +42,14 @@ export class HomeComponent implements OnInit {
 
   loadEvents() {
     if (this.selectedDate) {
-        const date = new Date(this.selectedDate.getTime() - (this.selectedDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-        console.log("Selected Date:", date); // Añadido para depuración
-        this.eventService.getEventsByDate(date).subscribe((data: Event[]) => {
-            this.events = data;
-        });
+      const date = new Date(this.selectedDate.getTime() - (this.selectedDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+      this.eventService.getEventsByDate(date).subscribe((data: Event[]) => {
+        this.events = data;
+      });
     } else {
-        this.eventService.getEventsByDate(null).subscribe((data: Event[]) => {
-            this.events = data;
-        });
+      this.eventService.getEventsByDate(null).subscribe((data: Event[]) => {
+        this.events = data;
+      });
     }
   }
 
@@ -60,9 +59,12 @@ export class HomeComponent implements OnInit {
   }
 
   openEventDetails(event: Event): void {
-    console.log('Opening event details for:', event); // Verificar el evento aquí
-    this.dialog.open(EventDetailsComponent, {
+    const dialogRef = this.dialog.open(EventDetailsComponent, {
       data: event
+    });
+
+    dialogRef.componentInstance.eventoComprado.subscribe(() => {
+      this.loadEvents(); // Recargar eventos después de cerrar el modal
     });
   }
 }

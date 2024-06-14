@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Output, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -63,6 +63,8 @@ import { CompraModalComponent } from '../components/compra-modal/compra-modal.co
   imports: [CommonModule, MatButtonModule]
 })
 export class EventDetailsComponent {
+  @Output() eventoComprado = new EventEmitter<void>(); // Añadido EventEmitter
+
   constructor(
     public dialogRef: MatDialogRef<EventDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -76,19 +78,18 @@ export class EventDetailsComponent {
   }
 
   buy(): void {
-    console.log('Buy button clicked');
     const token = this.authService.getToken();
-    console.log('Retrieved token:', token);
-
     if (!this.authService.isAuthenticated()) {
-      console.log('User not authenticated, redirecting to login');
       this.close();
       this.router.navigate(['/login']);
     } else {
-      console.log('User is authenticated, opening compra modal');
-      console.log('Event ID:', this.data.idEvento); // Log para verificar eventId antes de abrir el modal
-      this.dialog.open(CompraModalComponent, {
-        data: { eventId: this.data.idEvento, entradasDisponibles: this.data.entradasDisponibles } // Asegúrate de que el eventId y entradasDisponibles se pasan correctamente aquí
+      const dialogRef = this.dialog.open(CompraModalComponent, {
+        data: { eventId: this.data.idEvento, precio: this.data.precio, entradasDisponibles: this.data.entradasDisponibles }
+      });
+
+      dialogRef.componentInstance.compraRealizada.subscribe(() => {
+        this.eventoComprado.emit(); // Emitir evento de compra realizada
+        this.dialogRef.close();
       });
     }
   }

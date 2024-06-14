@@ -5,7 +5,6 @@ import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Evento
 import com.springboot.backend.focusclubapp.focusclubbackend.models.mapper.Mapper;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
