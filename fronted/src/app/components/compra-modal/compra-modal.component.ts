@@ -9,6 +9,7 @@ import { CompraService } from '../../services/compra.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { firstValueFrom } from 'rxjs';
 
 declare var paypal: any; // Declarar el objeto paypal
 
@@ -72,9 +73,9 @@ export class CompraModalComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     paypal.Buttons({
-      createOrder: (data: any, actions: any) => {
-        // Validar la cantidad de entradas disponibles antes de crear el pedido
-        return this.compraService.verificarDisponibilidad(this.data.eventId, this.cantidadEntradas).toPromise().then(disponible => {
+      createOrder: async (data: any, actions: any) => {
+        try {
+          const disponible = await firstValueFrom(this.compraService.verificarDisponibilidad(this.data.eventId, this.cantidadEntradas));
           if (disponible) {
             return actions.order.create({
               purchase_units: [{
@@ -91,7 +92,10 @@ export class CompraModalComponent implements AfterViewInit {
             });
             throw new Error('No hay suficientes entradas disponibles.');
           }
-        });
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
       },
       onApprove: (data: any, actions: any) => {
         return actions.order.capture().then((details: any) => {
