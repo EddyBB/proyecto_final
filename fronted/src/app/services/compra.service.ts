@@ -17,6 +17,8 @@ export class CompraService {
   }
 
   verificarDisponibilidad(eventoId: number, cantidad: number): Observable<boolean> {
-    return this.http.get<boolean>(`${this.baseUrl}/verificar-disponibilidad?eventoId=${eventoId}&cantidad=${cantidad}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<boolean>(`${this.baseUrl}/verificar-disponibilidad?eventoId=${eventoId}&cantidad=${cantidad}`, { headers });
   }
 }
