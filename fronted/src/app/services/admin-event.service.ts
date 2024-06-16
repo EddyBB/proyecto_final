@@ -98,4 +98,14 @@ export class AdminEventService {
     const headers = this.getAuthHeaders();
     return this.http.delete<void>(`${this.baseUrl}/salas/${id}`, { headers });
   }
+
+  getPurchases(): Observable<any[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<any[]>(`${this.baseUrl}/compras`, { headers });
+  }
+
+  deletePurchase(id: number): Observable<void> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.baseUrl}/compras/${id}`, { headers });
+  }
 }

@@ -1,0 +1,51 @@
+<app-admin-header></app-admin-header>
+<div class="admin-container">
+  <h1>Gestión de Compras</h1>
+  <table mat-table [dataSource]="purchases" class="mat-elevation-z8 custom-table">
+    <ng-container matColumnDef="idCompra">
+      <th mat-header-cell *matHeaderCellDef> ID Compra </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.idCompra }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="clienteId">
+      <th mat-header-cell *matHeaderCellDef> Cliente ID </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.clienteId }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="eventoId">
+      <th mat-header-cell *matHeaderCellDef> Evento ID </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.eventoId }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fechaCompra">
+      <th mat-header-cell *matHeaderCellDef> Fecha Compra </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.fechaCompra | date: 'short' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="precioEntrada">
+      <th mat-header-cell *matHeaderCellDef> Precio Entrada </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.precioEntrada | currency }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cantidadEntradas">
+      <th mat-header-cell *matHeaderCellDef> Cantidad Entradas </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.cantidadEntradas }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="precioTotal">
+      <th mat-header-cell *matHeaderCellDef> Precio Total </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.precioTotal | currency }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let purchase">
+        <button mat-button color="warn" (click)="deletePurchase(purchase.idCompra)">Eliminar</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+<app-admin-footer></app-admin-footer>
