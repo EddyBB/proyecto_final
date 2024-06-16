@@ -1,3 +1,4 @@
+<app-admin-header></app-admin-header>
 <div class="admin-container">
   <h1>Gestión de Compras</h1>
   <table mat-table [dataSource]="purchases" class="mat-elevation-z8">
@@ -47,3 +48,4 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
+<app-admin-footer></app-admin-footer>
