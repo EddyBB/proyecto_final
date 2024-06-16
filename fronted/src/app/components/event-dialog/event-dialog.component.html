@@ -32,20 +32,20 @@
     <ng-container *ngIf="isEventSaved">
       <mat-form-field appearance="outline">
         <mat-label>Discoteca</mat-label>
-        <input matInput formControlName="discotecaNombre">
+        <input matInput formControlName="discotecaNombre" [disabled]="!eventForm.get('discotecaNombre')?.enabled">
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Ubicación</mat-label>
-        <input matInput formControlName="ubicacion">
+        <input matInput formControlName="ubicacion" [disabled]="!eventForm.get('ubicacion')?.enabled">
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Sala</mat-label>
-        <input matInput formControlName="salaNombre">
+        <input matInput formControlName="salaNombre" [disabled]="!eventForm.get('salaNombre')?.enabled">
       </mat-form-field>
     </ng-container>
-    <button mat-raised-button color="primary" (click)="saveEvent()" [disabled]="eventForm.invalid">Guardar Evento</button>
+    <div class="form-buttons">
+      <button mat-raised-button color="primary" (click)="saveEvent()" [disabled]="eventForm.invalid">Guardar Evento</button>
+      <button mat-button mat-dialog-close>Cancelar</button>
+    </div>
   </form>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="closeDialog()">Cancelar</button>
 </div>

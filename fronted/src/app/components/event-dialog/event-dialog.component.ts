@@ -62,10 +62,6 @@ export class EventDialogComponent implements OnInit {
       // Guardar los valores originales de discoteca y sala para verificar cambios
       this.originalDiscoteca = this.data.event.discoteca ? { ...this.data.event.discoteca } : null;
       this.originalSala = this.data.event.sala ? { ...this.data.event.sala } : null;
-
-      // Verificar los valores originales
-      console.log('Original Discoteca:', this.originalDiscoteca);
-      console.log('Original Sala:', this.originalSala);
     }
   }
 
@@ -92,7 +88,6 @@ export class EventDialogComponent implements OnInit {
   }
 
   updateEntities(formValue: any, event: SimpleEvent) {
-    console.log('Updating event with data:', event);
     this.eventService.updateEvent(this.data.event.idEvento, event).subscribe({
       next: () => {
         console.log('Event updated');
@@ -105,7 +100,6 @@ export class EventDialogComponent implements OnInit {
   }
 
   updateDiscoteca(formValue: any) {
-    console.log('Before updating discoteca:', this.originalDiscoteca);
     if (formValue.discotecaNombre || formValue.ubicacion) {
       if (this.originalDiscoteca && this.originalDiscoteca.idDiscoteca !== null) {
         const discoteca: Discoteca = {
@@ -117,17 +111,17 @@ export class EventDialogComponent implements OnInit {
         this.eventService.updateDiscoteca(discoteca.idDiscoteca!, discoteca).subscribe({
           next: () => {
             console.log('Discoteca updated');
-            this.updateSala(formValue, discoteca.idDiscoteca);
+            this.updateSala(formValue);
           },
           error: (err) => {
             console.error('Error updating discoteca', err);
           }
         });
       } else {
-        console.log('ID Discoteca no disponible, no se puede actualizar.');
+        this.createDiscoteca(formValue);
       }
     } else {
-      this.updateSala(formValue, this.originalDiscoteca?.idDiscoteca ?? null);
+      this.updateSala(formValue);
     }
   }
 
@@ -148,8 +142,7 @@ export class EventDialogComponent implements OnInit {
     });
   }
 
-  updateSala(formValue: any, discotecaId: number | null) {
-    console.log('Before updating sala:', this.originalSala);
+  updateSala(formValue: any, discotecaId: number | null = null) {
     if (formValue.salaNombre) {
       if (this.originalSala && this.originalSala.idSala !== null) {
         const sala: Sala = {
@@ -168,8 +161,8 @@ export class EventDialogComponent implements OnInit {
             console.error('Error updating sala', err);
           }
         });
-      } else {
-        console.log('ID Sala no disponible, no se puede actualizar.');
+      } else if (discotecaId !== null) {
+        this.createSala(formValue, discotecaId);
       }
     } else {
       this.dialogRef.close(true);
@@ -195,10 +188,8 @@ export class EventDialogComponent implements OnInit {
   }
 
   createEvent(event: SimpleEvent) {
-    console.log('Creating event with data:', event);
     this.eventService.createEvent(event).subscribe({
       next: () => {
-        console.log('Event created');
         this.dialogRef.close(true);
       },
       error: (err) => {
