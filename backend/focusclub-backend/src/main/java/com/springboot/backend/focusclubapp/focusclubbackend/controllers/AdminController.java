@@ -3,6 +3,7 @@ package com.springboot.backend.focusclubapp.focusclubbackend.controllers;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dao.IEventoDao;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.ClienteUpdateDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraExtendidaDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.SalaDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.*;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.services.*;
@@ -130,9 +131,9 @@ public class AdminController {
 
     @GetMapping("/compras")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<CompraDTO> getAllCompras() {
-        logger.debug("Obteniendo todas las compras");
-        return compraService.findAll();
+    public List<CompraExtendidaDTO> getAllCompras() {
+        logger.debug("Obteniendo todas las compras con nombres de cliente y evento");
+        return compraService.findAllComprasWithClientAndEventNames();
     }
 
     @GetMapping("/compras/{id}")

@@ -23,7 +23,7 @@ import { AdminFooterComponent } from '../admin-footer/admin-footer.component';
 })
 export class AdminPurchaseListComponent implements OnInit {
   purchases: Compra[] = [];
-  displayedColumns: string[] = ['idCompra', 'clienteId', 'eventoId', 'fechaCompra', 'precioEntrada', 'cantidadEntradas', 'precioTotal', 'acciones'];
+  displayedColumns: string[] = ['idCompra', 'clienteNombre', 'eventoNombre', 'fechaCompra', 'precioEntrada', 'cantidadEntradas', 'precioTotal', 'acciones'];
 
   constructor(private purchaseService: AdminEventService) {}
 

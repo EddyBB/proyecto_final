@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraDTO;
+import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.CompraExtendidaDTO;
 import com.springboot.backend.focusclubapp.focusclubbackend.models.entity.Compra;
 
 public interface CompraService {
@@ -13,7 +14,8 @@ public interface CompraService {
     void deleteById(Long id);
     Optional<CompraDTO> findById(Long id);
     Compra convertToEntity(CompraDTO compraDTO);
-    boolean verificarDisponibilidad(Long eventoId, int cantidad); // Nuevo método
+    boolean verificarDisponibilidad(Long eventoId, int cantidad);
+    List<CompraExtendidaDTO> findAllComprasWithClientAndEventNames();
 }
 
 

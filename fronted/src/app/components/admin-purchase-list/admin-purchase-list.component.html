@@ -1,20 +1,19 @@
-<app-admin-header></app-admin-header>
 <div class="admin-container">
   <h1>Gestión de Compras</h1>
-  <table mat-table [dataSource]="purchases" class="mat-elevation-z8 custom-table">
+  <table mat-table [dataSource]="purchases" class="mat-elevation-z8">
     <ng-container matColumnDef="idCompra">
       <th mat-header-cell *matHeaderCellDef> ID Compra </th>
       <td mat-cell *matCellDef="let purchase"> {{ purchase.idCompra }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="clienteId">
-      <th mat-header-cell *matHeaderCellDef> Cliente ID </th>
-      <td mat-cell *matCellDef="let purchase"> {{ purchase.clienteId }} </td>
+    <ng-container matColumnDef="clienteNombre">
+      <th mat-header-cell *matHeaderCellDef> Cliente </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.clienteNombre }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="eventoId">
-      <th mat-header-cell *matHeaderCellDef> Evento ID </th>
-      <td mat-cell *matCellDef="let purchase"> {{ purchase.eventoId }} </td>
+    <ng-container matColumnDef="eventoNombre">
+      <th mat-header-cell *matHeaderCellDef> Evento </th>
+      <td mat-cell *matCellDef="let purchase"> {{ purchase.eventoNombre }} </td>
     </ng-container>
 
     <ng-container matColumnDef="fechaCompra">
@@ -48,4 +47,3 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-<app-admin-footer></app-admin-footer>
