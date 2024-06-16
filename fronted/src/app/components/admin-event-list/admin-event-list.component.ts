@@ -8,7 +8,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { EventDialogComponent } from '../event-dialog/event-dialog.component';
 import { AdminHeaderComponent } from '../admin-header/admin-header.component';
 import { AdminFooterComponent } from '../admin-footer/admin-footer.component';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { FormsModule } from '@angular/forms';
+import { forkJoin, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-admin-event-list',
@@ -22,7 +25,7 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule
     MatIconModule,
     AdminHeaderComponent,
     AdminFooterComponent,
-    FormsModule // Add FormsModule to imports
+    FormsModule
   ]
 })
 export class AdminEventListComponent implements OnInit {
@@ -120,14 +123,79 @@ export class AdminEventListComponent implements OnInit {
   }
 
   deleteEvent(id: number): void {
-    this.eventService.deleteEvent(id).subscribe({
-      next: () => {
-        this.loadEvents();
-      },
-      error: (err) => {
-        console.error('Error deleting event', err);
-      }
-    });
+    const event = this.events.find(e => e.idEvento === id);
+    if (!event) {
+      console.error('Evento no encontrado');
+      return;
+    }
+
+    if (event.salaId) {
+      this.eventService.deleteSala(event.salaId).subscribe({
+        next: () => {
+          console.log('Sala eliminada');
+          if (event.discotecaId) {
+            this.eventService.deleteDiscoteca(event.discotecaId).subscribe({
+              next: () => {
+                console.log('Discoteca eliminada');
+                this.eventService.deleteEvent(id).subscribe({
+                  next: () => {
+                    console.log('Evento eliminado');
+                    this.loadEvents();
+                  },
+                  error: (err) => {
+                    console.error('Error eliminando evento', err);
+                  }
+                });
+              },
+              error: (err) => {
+                console.error('Error eliminando discoteca', err);
+              }
+            });
+          } else {
+            this.eventService.deleteEvent(id).subscribe({
+              next: () => {
+                console.log('Evento eliminado');
+                this.loadEvents();
+              },
+              error: (err) => {
+                console.error('Error eliminando evento', err);
+              }
+            });
+          }
+        },
+        error: (err) => {
+          console.error('Error eliminando sala', err);
+        }
+      });
+    } else if (event.discotecaId) {
+      this.eventService.deleteDiscoteca(event.discotecaId).subscribe({
+        next: () => {
+          console.log('Discoteca eliminada');
+          this.eventService.deleteEvent(id).subscribe({
+            next: () => {
+              console.log('Evento eliminado');
+              this.loadEvents();
+            },
+            error: (err) => {
+              console.error('Error eliminando evento', err);
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Error eliminando discoteca', err);
+        }
+      });
+    } else {
+      this.eventService.deleteEvent(id).subscribe({
+        next: () => {
+          console.log('Evento eliminado');
+          this.loadEvents();
+        },
+        error: (err) => {
+          console.error('Error eliminando evento', err);
+        }
+      });
+    }
   }
 
   createEvent(): void {
@@ -216,7 +284,4 @@ export class AdminEventListComponent implements OnInit {
       }
     });
   }
-  
-  
-  
 }
