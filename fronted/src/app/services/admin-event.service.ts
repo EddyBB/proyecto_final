@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { SimpleEvent } from '../models/simple-event.model';
 import { Discoteca } from '../models/discoteca.model';
 import { Sala } from '../models/sala.model';
+import { Compra } from '../models/compra.model';
 
 @Injectable({
   providedIn: 'root'
@@ -99,9 +100,9 @@ export class AdminEventService {
     return this.http.delete<void>(`${this.baseUrl}/salas/${id}`, { headers });
   }
 
-  getPurchases(): Observable<any[]> {
+  getPurchases(): Observable<Compra[]> {
     const headers = this.getAuthHeaders();
-    return this.http.get<any[]>(`${this.baseUrl}/compras`, { headers });
+    return this.http.get<Compra[]>(`${this.baseUrl}/compras`, { headers });
   }
 
   deletePurchase(id: number): Observable<void> {
