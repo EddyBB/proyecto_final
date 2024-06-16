@@ -1,0 +1,51 @@
+<h1 mat-dialog-title>{{ data.event ? 'Editar Evento' : 'Nuevo Evento' }}</h1>
+<div mat-dialog-content class="dialog-content">
+  <form [formGroup]="eventForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Descripción</mat-label>
+      <input matInput formControlName="descripcion">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Aforo</mat-label>
+      <input matInput formControlName="aforo" type="number">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Entradas Disponibles</mat-label>
+      <input matInput formControlName="entradasDisponibles" type="number">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha</mat-label>
+      <input matInput formControlName="fecha" type="date">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Precio</mat-label>
+      <input matInput formControlName="precio" type="number">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Imagen URL</mat-label>
+      <input matInput formControlName="imagenUrl">
+    </mat-form-field>
+    <ng-container *ngIf="isEventSaved">
+      <mat-form-field appearance="outline">
+        <mat-label>Discoteca</mat-label>
+        <input matInput formControlName="discotecaNombre">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Ubicación</mat-label>
+        <input matInput formControlName="ubicacion">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Sala</mat-label>
+        <input matInput formControlName="salaNombre">
+      </mat-form-field>
+    </ng-container>
+    <button mat-raised-button color="primary" (click)="saveEvent()" [disabled]="eventForm.invalid">Guardar Evento</button>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">Cancelar</button>
+</div>

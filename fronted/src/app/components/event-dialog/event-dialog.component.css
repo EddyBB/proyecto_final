@@ -1,0 +1,44 @@
+.mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 15px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button[mat-dialog-close] {
+  background-color: #6c757d;
+}
+
+button[mat-dialog-close]:hover {
+  background-color: #5a6268;
+}
+
+.create-button {
+  margin-top: 15px;
+}
+
+.dialog-content {
+  width: 500px;
+}
