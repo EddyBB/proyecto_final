@@ -15,7 +15,5 @@ export const routes: Routes = [
   { path: 'admin', component: AdminPanelComponent , canActivate: [adminGuard]},
   {  path: 'admin/events', component: AdminEventListComponent, canActivate: [adminGuard]},
   { path: 'admin/purchases', component: AdminPanelComponent, canActivate: [adminGuard] },
-  { path: 'admin/discotecas', component: AdminPanelComponent, canActivate: [adminGuard] },
-  { path: 'admin/salas', component: AdminPanelComponent, canActivate: [adminGuard] },
   { path: '**', redirectTo: '' }
 ];

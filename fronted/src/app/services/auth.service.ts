@@ -25,6 +25,8 @@ export class AuthService {
         this.saveUserRole(response.rol);
         this.isAuthenticatedSubject.next(true);
         this.userRoleSubject.next(response.rol);
+        this.updateUserRole(response.rol);
+        console.log('Role updated in login:', response.rol);
       })
     );
   }
@@ -37,6 +39,7 @@ export class AuthService {
     }
     this.isAuthenticatedSubject.next(false);
     this.userRoleSubject.next(null);
+    this.updateUserRole(null);
     this.router.navigate(['/']);
   }
 
@@ -106,4 +109,10 @@ export class AuthService {
   private isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }
+
+    // Nuevo método para actualizar el rol del usuario
+    updateUserRole(role: string | null) {
+      console.log('Updating userRoleSubject:', role);
+      this.userRoleSubject.next(role);
+    }
 }

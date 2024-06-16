@@ -41,10 +41,15 @@ export class LoginComponent {
           this.authService.saveToken(response.accessToken);
           this.authService.saveClienteId(response.clienteId);
           this.authService.saveUserRole(response.rol);
+
+          console.log('Role saved:', response.rol);
+          this.authService.updateUserRole(response.rol);
           
           if (response.rol === 'ADMIN') {
+            console.log('Navigating to admin panel');
             this.router.navigate(['/admin']);
           } else {
+            console.log('Navigating to returnUrl');
             this.router.navigate([this.returnUrl]);
           }
         } else {

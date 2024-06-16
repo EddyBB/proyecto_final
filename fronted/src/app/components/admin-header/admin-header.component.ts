@@ -14,7 +14,14 @@ export class AdminHeaderComponent {
 
   constructor(private router: Router, private authService: AuthService) {}
 
-  logout() {
+  navigateToAdminPanel(event: MouseEvent) {
+    event.preventDefault(); // Evitar la recarga de la página
+    console.log('Navigating to Admin Panel');
+    this.router.navigate(['/admin']);
+  }
+
+  logout(event: MouseEvent) {
+    event.preventDefault(); // Evitar la recarga de la página
     this.authService.logout();
   }
 }
