@@ -1,7 +1,6 @@
 package com.springboot.backend.focusclubapp.focusclubbackend.models.services;
 
 import com.springboot.backend.focusclubapp.focusclubbackend.models.dto.SalaDTO;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +13,8 @@ public interface SalaService {
     SalaDTO save(SalaDTO salaDTO);
 
     void deleteById(Long id);
+
+    List<SalaDTO> findByEventoId(Long eventoId);
+
+    List<SalaDTO> findByDiscotecaId(Long discotecaId);
 }

@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 
 @Entity
@@ -23,10 +25,12 @@ public class Sala implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_evento", nullable = false)
+    @JsonBackReference
     private Evento evento;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_discoteca", nullable = false)
+    @JsonBackReference
     private Discoteca discoteca;
 
     @Column(length = 100, nullable = false)

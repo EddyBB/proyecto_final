@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "eventos")
 public class Evento implements Serializable {
@@ -44,6 +46,7 @@ public class Evento implements Serializable {
     private String imagenUrl;
 
     @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Sala> salas;
 
     // Constructor con solo id

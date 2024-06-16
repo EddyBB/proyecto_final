@@ -185,12 +185,30 @@ public class AdminController {
     }
 
     @PostMapping("/salas")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SalaDTO> createSala(@RequestBody SalaDTO salaDTO) {
-        logger.debug("Creando sala: {}", salaDTO.getNombre());
-        SalaDTO createdSala = salaService.save(salaDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdSala);
+        logger.debug("createSala - SalaDTO received: {}", salaDTO); // Log para verificar los datos recibidos
+    
+        // Retrieve the related entities
+        Optional<Discoteca> discoteca = discotecaService.findById(salaDTO.getIdDiscoteca());
+        Optional<Evento> evento = eventoService.findById(salaDTO.getIdEvento());
+    
+        if (!discoteca.isPresent() || !evento.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+    
+        // Set the retrieved entities in the DTO
+        SalaDTO newSalaDTO = new SalaDTO();
+        newSalaDTO.setNombre(salaDTO.getNombre());
+        newSalaDTO.setIdDiscoteca(discoteca.get().getIdDiscoteca());
+        newSalaDTO.setIdEvento(evento.get().getIdEvento());
+    
+        logger.debug("createSala - SalaDTO to be saved: {}", newSalaDTO); // Log para verificar los datos antes de guardar
+    
+        // Save the SalaDTO
+        SalaDTO savedSalaDTO = salaService.save(newSalaDTO);
+        return ResponseEntity.ok(savedSalaDTO);
     }
+    
 
     @PostMapping("/entradas")
     @PreAuthorize("hasRole('ADMIN')")
@@ -231,17 +249,25 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Evento> updateEvento(@PathVariable Long id, @RequestBody Evento evento) {
         logger.debug("Actualizando evento con id: {}", id);
+        logger.debug("Datos del evento recibidos: {}", evento);
         Optional<Evento> optionalEvento = eventoService.findById(id);
         if (optionalEvento.isPresent()) {
             Evento existingEvento = optionalEvento.get();
             existingEvento.setNombre(evento.getNombre());
             existingEvento.setDescripcion(evento.getDescripcion());
+            existingEvento.setAforo(evento.getAforo());
+            existingEvento.setEntradasDisponibles(evento.getEntradasDisponibles());
+            existingEvento.setFecha(evento.getFecha());
+            existingEvento.setPrecio(evento.getPrecio());
+            existingEvento.setImagenUrl(evento.getImagenUrl());
             // Actualiza otros campos según sea necesario
             Evento updatedEvento = eventoService.save(existingEvento);
+            logger.debug("Evento actualizado: {}", updatedEvento);
             return ResponseEntity.ok(updatedEvento);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+    
 
     @PutMapping("/discotecas/{id}")
     @PreAuthorize("hasRole('ADMIN')")

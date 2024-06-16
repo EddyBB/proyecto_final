@@ -51,4 +51,23 @@ public class SalaServiceImpl implements SalaService {
     public void deleteById(Long id) {
         salaRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SalaDTO> findByEventoId(Long eventoId) {
+        List<Sala> salas = salaRepository.findByEventoId(eventoId);
+        return salas.stream()
+                .map(Mapper::toSalaDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SalaDTO> findByDiscotecaId(Long discotecaId) {
+        List<Sala> salas = salaRepository.findByDiscoteca_IdDiscoteca(discotecaId);
+        return salas.stream()
+                .map(Mapper::toSalaDTO)
+                .collect(Collectors.toList());
+    }
 }
+
